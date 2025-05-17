@@ -1,0 +1,30 @@
+---
+name: pss-listener
+type: Agent Requested
+description: Crée un service WebSocket pour recevoir et traiter les actions PSS (Daedo, KPNP) selon le Competition Data Protocol.
+---
+
+Steps:
+- Create a WebSocket listener in src/pss/pssSocket.ts
+- Listen to incoming events such as:
+    - match:start
+    - match:stop
+    - match:action
+    - match:config
+- Parse and map incoming messages to:
+    - MatchAction (create entries for scores, penalties, etc.)
+    - MatchResult (update score/result if match ends)
+    - MatchConfiguration (store thresholds and match rules)
+- Use Prisma to persist data in relevant models
+- Use ActionType and ActionSource enums
+- Optional: emit score updates to frontend via Socket.IO
+- Handle conflict detection if same action is sent twice
+- Validate incoming message structure using Zod
+
+Structure:
+- src/pss/pssSocket.ts
+- src/pss/pssService.ts
+- src/dto/pssAction.dto.ts
+- Use enums from schema: ActionType, ActionSource
+
+Ensure the listener is extensible to other scoring systems.

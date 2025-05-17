@@ -1,0 +1,291 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Swagger Documentation Agent
+
+```yaml
+---
+description: Generates Swagger documentation for new API routes in the Taekwondo API platform
+globs: ["**/routes/**/*.ts", "**/routes/**/*.js", "**/controllers/**/*.ts", "**/controllers/**/*.js"]
+alwaysApply: false
+---
+```
+
+## Swagger Documentation Best Practices
+
+When creating new routes in our Taekwondo API platform, it's essential to document them properly in Swagger to facilitate testing and integration. This agent helps ensure consistent documentation across all API endpoints.
+
+### Route Documentation Template
+
+For every new route you create, add corresponding documentation in the `swagger/openapi.json` file following this pattern:
+
+```typescript
+// In your route file (e.g., src/routes/some-resource.routes.ts)
+/**
+ * @swagger
+ * /api/resource:
+ *   get:
+ *     summary: Get all resources
+ *     tags: [Resources]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of resources retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Resource'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
+ */
+router.get('/', getAllResources);
+```
+
+### Swagger JSON Structure
+
+When adding a new endpoint, make sure to update the `swagger/openapi.json` file with:
+
+```json
+{
+  "paths": {
+    "/api/your-new-route": {
+      "get": {
+        "summary": "Brief description of endpoint",
+        "tags": ["Logical category"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Resource identifier"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success response description",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/YourResponseModel"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+### Common Schema Definitions
+
+Ensure these common schemas are defined in the `components/schemas` section:
+
+```json
+"components": {
+  "schemas": {
+    "Error": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "statusCode": {
+          "type": "integer",
+          "example": 400
+        },
+        "message": {
+          "type": "string",
+          "example": "Error message"
+        }
+      }
+    }
+  },
+  "responses": {
+    "Unauthorized": {
+      "description": "Unauthorized - Authentication required",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/Error"
+          }
+        }
+      }
+    },
+    "ServerError": {
+      "description": "Internal server error",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/Error"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+### HTTP Method Guidelines
+
+Document each HTTP method appropriately:
+
+- **GET**: For retrieving resources
+- **POST**: For creating new resources
+- **PUT**: For full updates to existing resources
+- **PATCH**: For partial updates to existing resources
+- **DELETE**: For removing resources
+
+### Authentication Documentation
+
+For secured routes, always include:
+
+```json
+"security": [
+  {
+    "bearerAuth": []
+  }
+]
+```
+
+### Example for Common Operations
+
+#### For resource collection operations:
+
+```json
+"/api/resources": {
+  "get": {
+    "summary": "Get all resources",
+    "tags": ["Resources"]
+  },
+  "post": {
+    "summary": "Create a new resource",
+    "tags": ["Resources"]
+  }
+}
+```
+
+#### For individual resource operations:
+
+```json
+"/api/resources/{id}": {
+  "get": {
+    "summary": "Get a resource by ID",
+    "tags": ["Resources"]
+  },
+  "put": {
+    "summary": "Update a resource",
+    "tags": ["Resources"]
+  },
+  "delete": {
+    "summary": "Delete a resource",
+    "tags": ["Resources"]
+  }
+}
+```
+
+### Full Example for a Competition Route
+
+```json
+"/api/competitions": {
+  "get": {
+    "summary": "Get all competitions",
+    "tags": ["Competitions"],
+    "responses": {
+      "200": {
+        "description": "List of competitions",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Competition"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "post": {
+    "summary": "Create a new competition",
+    "tags": ["Competitions"],
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/CreateCompetitionDto"
+          }
+        }
+      }
+    },
+    "responses": {
+      "201": {
+        "description": "Competition created successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Competition"
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Bad request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+Remember: Good API documentation is crucial for team collaboration and faster integration. Take the time to properly document each new route you create.

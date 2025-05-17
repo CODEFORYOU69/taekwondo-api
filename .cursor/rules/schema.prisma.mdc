@@ -1,0 +1,197 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Prisma Schema Protection Agent
+
+```yaml
+---
+description: Protects the Prisma schema in the Taekwondo API from automatic changes
+globs: ["**/prisma/schema.prisma", "**/prisma/migrations/**", "**/db/**", "**/repositories/**"]
+alwaysApply: true
+---
+```
+
+## Prisma Schema Protection Guidelines
+
+The Prisma schema in this Taekwondo Competition API project reflects the official World Taekwondo (WT) and FFTDA competition structure. It must be protected from automatic modifications.
+
+### ⚠️ CRITICAL: DO NOT MODIFY THE SCHEMA.PRISMA FILE
+
+The `schema.prisma` file is a carefully designed data model that represents standard World Taekwondo competition structures and must not be altered without explicit developer authorization.
+
+### Key Protection Rules
+
+1. **No automatic schema changes**
+   - Never add new models
+   - Never add fields to existing models
+   - Never change relationships
+   - Never modify enum values
+   - Never alter type definitions
+
+2. **Schema is the source of truth**
+   - All API endpoints must use existing models as defined
+   - All DTO structures must align with schema definitions
+   - All database operations must use the types provided by Prisma
+   - All validation schemas must match Prisma structure
+
+3. **Follow existing conventions**
+   - Use Prisma repository pattern for consistent data access
+   - Maintain World Taekwondo naming standards for competition entities
+   - Respect the existing enums that align with WT terminology
+
+### When Schema Updates Are Needed
+
+If you identify a potential need for schema changes:
+
+1. Explicitly inform the developer instead of making changes
+2. Explain the rationale for the proposed change
+3. Wait for confirmation before proceeding
+4. Document the change with clear explanations of WT compliance
+
+### Taekwondo API Database Operations
+
+When implementing database operations against this schema:
+
+```typescript
+// CORRECT: Use the existing schema with proper repository pattern
+export class CompetitionRepository {
+  async getCompetitionWithEvents(id: string) {
+    return prisma.competition.findUnique({
+      where: { id },
+      include: {
+        events: true,
+        organizer: true,
+        sessions: true
+      }
+    });
+  }
+  
+  async createEvent(competitionId: string, data: CreateEventDto) {
+    // Validate against existing schema
+    return prisma.event.create({
+      data: {
+        ...data,
+        competition: {
+          connect: { id: competitionId }
+        }
+      }
+    });
+  }
+}
+
+// INCORRECT: Never attempt to extend the schema through code
+// ❌ DO NOT DO THIS:
+// prisma.competition.create({
+//   data: {
+//     ...data,
+//     newFieldNotInSchema: value // Would cause runtime error 
+//   }
+// })
+```
+
+### Express API Implementation With Existing Schema
+
+Implement API endpoints that respect the schema structure:
+
+```typescript
+// src/controllers/competition.controller.ts
+export const createCompetition = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    // Use validation that matches the schema
+    const competitionData = createCompetitionSchema.parse(req.body);
+    
+    const competition = await prisma.competition.create({
+      data: {
+        name: competitionData.name,
+        hostCity: competitionData.hostCity,
+        hostCountry: competitionData.hostCountry,
+        location: competitionData.location,
+        startDate: new Date(competitionData.startDate),
+        endDate: new Date(competitionData.endDate),
+        grade: competitionData.grade,
+        isWT: competitionData.isWT || false,
+        isPublic: competitionData.isPublic !== undefined ? competitionData.isPublic : true,
+        // Connect to existing models as per schema
+        organizer: {
+          connect: { id: competitionData.organizerId }
+        },
+        createdBy: {
+          connect: { id: req.user.userId }
+        }
+      }
+    });
+    
+    res.status(201).json(competition);
+  } catch (error) {
+    next(error);
+  }
+};
+```
+
+### Swagger Documentation With Existing Schema
+
+When documenting API endpoints, ensure they align with the schema:
+
+```json
+"components": {
+  "schemas": {
+    "Competition": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "cuid"
+        },
+        "name": {
+          "type": "string",
+          "example": "Paris 2024 French Open"
+        },
+        "hostCity": {
+          "type": "string",
+          "example": "Paris"
+        },
+        "hostCountry": {
+          "type": "string",
+          "enum": ["FRA", "KOR", "USA"],
+          "example": "FRA"
+        },
+        "location": {
+          "type": "string",
+          "example": "AccorHotels Arena"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endDate": {
+          "type": "string", 
+          "format": "date-time"
+        },
+        "grade": {
+          "type": "string",
+          "example": "G1"
+        },
+        "isWT": {
+          "type": "boolean",
+          "example": false
+        },
+        "isPublic": {
+          "type": "boolean",
+          "example": true
+        },
+        "organizerId": {
+          "type": "string",
+          "format": "cuid"
+        },
+        "createdById": {
+          "type": "string",
+          "format": "cuid"
+        }
+      },
+      "required": ["name", "hostCity", "hostCountry", "location", "startDate", "endDate", "organizerId", "createdById"]
+    }
+  }
+}
+```

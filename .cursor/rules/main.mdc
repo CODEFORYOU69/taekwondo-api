@@ -1,0 +1,342 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# API Documentation Agent for Taekwondo Competition Platform
+
+```yaml
+---
+description: Ensures consistent Swagger documentation for all API endpoints in the Taekwondo Competition Management Platform
+globs: ["**/routes/**/*.ts", "**/controllers/**/*.ts", "**/services/**/*.ts", "**/trpc/**/*.ts"]
+alwaysApply: true
+---
+```
+
+## API Documentation Standards
+
+When implementing new API routes or modifying existing ones in our Taekwondo Competition Platform, comprehensive Swagger documentation is required to ensure proper testing and integration with front-end components.
+
+### Core Documentation Principles
+
+1. **All endpoints must be documented** - No exceptions for even simple CRUD operations
+2. **World Taekwondo standards compliance** - Use official WT terminology in descriptions
+3. **Security specifications** - Document proper auth requirements
+4. **Request/response schemas** - Define complete data models
+5. **Error handling documentation** - Document all possible error states
+
+### API Structure Guidelines
+
+When adding new endpoints to `swagger/openapi.json`:
+
+```json
+{
+  "paths": {
+    "/api/competitions": {
+      "get": {
+        "summary": "Retrieve all competitions",
+        "tags": ["Competitions"],
+        "parameters": [
+          {
+            "name": "discipline",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["TKW_K", "TKW_P", "TKW_F", "TKW_T", "PTKW_K", "PTKW_P", "TKW_B"]
+            },
+            "description": "Filter by WT discipline"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved competitions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Competition"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+### tRPC Route Documentation
+
+For tRPC routes, document them both in Swagger and with comments:
+
+```typescript
+// src/server/trpc/routers/competitions.ts
+export const competitionRouter = router({
+  /**
+   * Get all competitions
+   * @swagger
+   * /api/trpc/competitions.getAll:
+   *   get:
+   *     summary: Get all competitions
+   *     tags: [Competitions]
+   */
+  getAll: publicProcedure
+    .input(
+      z.object({
+        discipline: z.enum(WTDisciplineEnum).optional(),
+        status: z.string().optional(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      // Implementation
+    }),
+});
+```
+
+### World Taekwondo Specific Documentation
+
+Always use official WT terminology for:
+
+1. **Disciplines** (TKW_K, TKW_P, etc.)
+2. **Divisions** (SENIORS, JUNIORS, etc.) 
+3. **Match phases** (F, SF, QF, etc.)
+4. **Scoring actions** (SCORE_HOME_PUNCH, PENALTY_AWAY, etc.)
+
+Example:
+
+```json
+"components": {
+  "schemas": {
+    "WTDiscipline": {
+      "type": "string",
+      "enum": ["TKW_K", "TKW_P", "TKW_F", "TKW_T", "PTKW_K", "PTKW_P", "TKW_B"],
+      "description": "World Taekwondo official disciplines: Kyorugi, Poomsae, Freestyle, Team, Para Kyorugi, Para Poomsae, Breaking Board"
+    }
+  }
+}
+```
+
+### Security Schema Definition
+
+Always include proper authentication requirements:
+
+```json
+"components": {
+  "securitySchemes": {
+    "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+    }
+  }
+}
+```
+
+For secured endpoints:
+
+```json
+"security": [
+  {
+    "bearerAuth": []
+  }
+]
+```
+
+### Response Templates
+
+Use consistent response formats:
+
+```json
+"components": {
+  "responses": {
+    "UnauthorizedError": {
+      "description": "Authentication required",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/Error"
+          }
+        }
+      }
+    },
+    "ForbiddenError": {
+      "description": "Insufficient permissions",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/Error"
+          }
+        }
+      }
+    },
+    "ValidationError": {
+      "description": "Invalid request parameters",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/ValidationError"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+### Standard Domain Models
+
+Document all core domain models according to FFTDA/WT standards:
+
+```json
+"components": {
+  "schemas": {
+    "Competition": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "cuid"
+        },
+        "name": {
+          "type": "string",
+          "example": "Paris 2024 French Open"
+        },
+        "hostCity": {
+          "type": "string",
+          "example": "Paris"
+        },
+        "hostCountry": {
+          "type": "string",
+          "enum": ["FRA", "KOR", "USA"],
+          "example": "FRA"
+        },
+        "discipline": {
+          "$ref": "#/components/schemas/WTDiscipline"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "Match": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "cuid"
+        },
+        "number": {
+          "type": "string",
+          "description": "Match number (e.g. 101)",
+          "example": "101"
+        },
+        "mat": {
+          "type": "integer",
+          "description": "Mat number",
+          "example": 1
+        },
+        "phase": {
+          "type": "string",
+          "enum": ["F", "SF", "QF", "R16", "R32", "R64", "R128", "BMC", "GMC", "RP"],
+          "description": "Match phase according to WT standards",
+          "example": "QF"
+        },
+        "homeCompetitorId": {
+          "type": "string",
+          "format": "cuid"
+        },
+        "awayCompetitorId": {
+          "type": "string",
+          "format": "cuid"
+        },
+        "homeScore": {
+          "type": "integer",
+          "example": 12
+        },
+        "awayScore": {
+          "type": "integer",
+          "example": 7
+        },
+        "resultStatus": {
+          "type": "string",
+          "enum": ["SCHEDULED", "RUNNING", "COMPLETED", "CANCELLED"]
+        }
+      }
+    }
+  }
+}
+```
+
+### Example for Live Events API
+
+Socket.IO endpoints should also be documented:
+
+```json
+"paths": {
+  "/api/socket.io": {
+    "get": {
+      "summary": "Socket.IO connection endpoint",
+      "description": "WebSocket endpoint for real-time match updates",
+      "tags": ["Live Events"],
+      "responses": {
+        "200": {
+          "description": "Socket.IO connection established",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "example": "connected"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+With event documentation:
+
+```json
+"components": {
+  "schemas": {
+    "SocketEvents": {
+      "type": "object",
+      "properties": {
+        "MATCH_UPDATE": {
+          "type": "object",
+          "description": "Emitted when match data is updated",
+          "properties": {
+            "matchId": {
+              "type": "string"
+            },
+            "homeScore": {
+              "type": "integer"
+            },
+            "awayScore": {
+              "type": "integer"
+            },
+            "action": {
+              "$ref": "#/components/schemas/ActionType"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```

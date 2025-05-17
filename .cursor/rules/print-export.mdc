@@ -1,0 +1,40 @@
+---
+name: print-export
+type: Agent Requested
+description: Génère les services d’exportation PDF et Excel conformes aux normes World Taekwondo (P01 à P18, planning, certificats).
+---
+
+When invoked, perform the following:
+
+- Create export service in /services/printService.ts
+- Use jsPDF to generate:
+    - Match sheets (P01)
+    - Referee sheets (P02)
+    - Result reports (P18)
+    - Certificates (participant, winner, referee)
+    - Accreditation and badges
+- Use ExcelJS to generate:
+    - Planning par aire et session
+    - Liste des pesées
+    - Brackets et poules
+
+- Use Zod for input validation
+- Endpoints (in /routes/print.ts):
+    - GET /print/match/:id (P01)
+    - GET /print/event/:id (XLSX match plan)
+    - GET /print/certificate/participant/:id
+    - GET /print/certificate/winner/:id
+    - GET /print/badge/:id
+
+- Store generated files in /exports or return as binary
+- Include layout templates from /templates/ if needed
+- Support languages: EN / FR
+
+Structure:
+- routes/print.ts
+- services/printService.ts
+- dto/print.dto.ts
+- templates/p01.html, p02.html...
+- exports/{pdf|xlsx}/...
+
+Ensure output is aligned with official WT format and FFTDA usage.

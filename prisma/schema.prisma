@@ -1,0 +1,1148 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ========================
+// ENUMS ALIGNÉS AVEC STANDARDS WT
+// ========================
+
+enum Role {
+  super_admin
+  admin
+  federation
+  club
+  coach
+  spectator
+}
+
+enum VictoryType {
+  PTF  // Win by final score
+  PTG  // Win by point gap
+  GDP  // Win by golden points
+  RSC  // Win by referee stops contest
+  SUP  // Win by superiority
+  WDR  // Win by withdrawal
+  DSQ  // Win by disqualification
+  PUN  // Win by punitive declaration
+  DQB  // Win by unsportsmanlike behavior
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  MIXED
+}
+
+enum ParticipantStatus {
+  REGISTERED
+  WITHDRAWN
+  DISQUALIFIED
+  INJURED
+  NO_SHOW
+}
+
+enum CompetitorType {
+  A  // Athlete (individual)
+  T  // Team
+}
+
+enum ScreenType {
+  SCOREBOARD
+  SCHEDULE
+  ANNOUNCEMENTS
+  RESULTS
+}
+
+enum WeighInStatus {
+  NOT_ATTEMPTED
+  FIRST_FAILED
+  SECOND_FAILED
+  VALIDATED
+  SURCLASSED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum NotificationType {
+  FIGHT_SOON
+  FIGHT_RESULT
+  RANDOM_WEIGHTIN
+  INFO
+}
+
+enum DocumentType {
+  MATCH_SHEET
+  CERTIFICATE
+  REPORT
+  ACCREDITATION
+  BADGE
+}
+
+enum OfficialRole {
+  CR              // Center Referee
+  J1              // Judge 1
+  J2              // Judge 2
+  J3              // Judge 3
+  TA              // Technical Assistant
+  RJ              // Review Jury
+  INS             // Inspection
+  WEI             // Weigh-in
+  REFEREE
+  JUDGE
+  TECHNICAL_DIRECTOR
+  DOCTOR
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  LOCK
+  UNLOCK
+  VALIDATE
+  DISQUALIFY
+}
+
+enum ResultType {
+  WIN
+  LOSS
+  TIE
+}
+
+enum MatchPhase {
+  F               // Final
+  SF              // Semi Final
+  QF              // Quarter Final
+  R16             // Round of 16
+  R32             // Round of 32
+  R64             // Round of 64
+  R128            // Round of 128
+  BMC             // Bronze Medal Contest (replacing deprecated BRZ)
+  GMC             // Gold Medal Contest
+  RP              // Repechage
+}
+
+enum WTDiscipline {
+  TKW_K          // Taekwondo Kyorugi
+  TKW_P          // Taekwondo Poomsae
+  TKW_F          // Taekwondo Freestyle
+  TKW_T          // Taekwondo Team
+  PTKW_K         // Para Taekwondo Kyorugi
+  PTKW_P         // Para Taekwondo Poomsae
+  TKW_B          // Taekwondo Breaking Board
+}
+
+enum WTDivision {
+  OLYMPIC
+  SENIORS
+  YOUTH_OLYMPIC
+  JUNIORS
+  CADETS
+  UNDER_21
+  KIDS
+  UNDER_30
+  UNDER_40
+  UNDER_50
+  UNDER_60
+  OVER_65
+  OVER_30
+  UNDER_17
+  OVER_17
+}
+
+enum PssDeviceType {
+  KPNP
+  DAEDO
+}
+
+enum CountryCode {
+  FRA
+  KOR
+  USA
+  ESP
+  GER
+  ITA
+  GBR
+  TUR
+  BRA
+  CAN
+  MEX
+  JPN
+  CHN
+  IND
+  NED
+  SWE
+  POL
+  BEL
+  ARG
+  AUS
+  // Ajouter tous les autres codes NOC ici
+}
+
+enum ResultStatus {
+  SCHEDULED
+  GETTING_READY
+  RUNNING
+  INTERMEDIATE
+  INTERRUPTED
+  FINISHED
+  OFFICIAL
+  CANCELLED
+  POSTPONED
+  RESCHEDULED
+  UNCONFIRMED
+  UNOFFICIAL
+  PROTESTED
+  LIVE
+  ONGOING
+  COMPLETED
+}
+enum ScheduleStatus {
+  SCHEDULED
+  GETTING_READY
+  RUNNING
+  FINISHED
+  DELAYED
+  CANCELLED
+  POSTPONED
+  RESCHEDULED
+  INTERRUPTED
+}
+
+enum CompetitionType {
+  ELIMINATION
+  POOL
+  POOL_ELIMINATION
+}
+
+enum ParticipantSource {
+  WT_GMS
+  INTERNAL
+}
+
+enum ActionType {
+  MATCH_LOADED    // Match is loaded
+  MATCH_START     // Match starts
+  ROUND_START     // Round start
+  MATCH_TIME      // Time update
+  MATCH_TIMEOUT   // Timeout
+  MATCH_RESUME    // Resume match
+  ROUND_END       // End of round
+  MATCH_END       // Match ends
+  
+  // Scoring actions
+  SCORE_HOME_PUNCH        // Score for home by Punch
+  SCORE_HOME_KICK         // Score for home by Kick
+  SCORE_HOME_TKICK        // Score for home by Turning Kick
+  SCORE_HOME_SKICK        // Score for home by Spinning Kick
+  SCORE_HOME_HEAD         // Score for home by Head Kick
+  SCORE_HOME_THEAD        // Score for home by Turning Head Kick
+  PENALTY_HOME            // Penalty for home
+  
+  SCORE_AWAY_PUNCH        // Score for away by Punch
+  SCORE_AWAY_KICK         // Score for away by Kick
+  SCORE_AWAY_TKICK        // Score for away by Turning Kick
+  SCORE_AWAY_SKICK        // Score for away by Spinning Kick
+  SCORE_AWAY_HEAD         // Score for away by Head Kick
+  SCORE_AWAY_THEAD        // Score for away by Turning Head Kick
+  PENALTY_AWAY            // Penalty for away
+  
+  // Invalidation actions
+  INVALIDATE_SCORE                // Invalidate score
+  INVALIDATE_SCORE_HOME_PUNCH     // Invalidate home punch
+  INVALIDATE_SCORE_HOME_KICK      // Invalidate home kick
+  INVALIDATE_SCORE_HOME_TKICK     // Invalidate home turning kick
+  INVALIDATE_SCORE_HOME_SKICK     // Invalidate home spinning kick
+  INVALIDATE_SCORE_HOME_HEAD      // Invalidate home head kick
+  INVALIDATE_SCORE_HOME_THEAD     // Invalidate home turning head kick
+  INVALIDATE_PENALTY_HOME         // Invalidate home penalty
+  
+  INVALIDATE_SCORE_AWAY_PUNCH     // Invalidate away punch
+  INVALIDATE_SCORE_AWAY_KICK      // Invalidate away kick
+  INVALIDATE_SCORE_AWAY_TKICK     // Invalidate away turning kick
+  INVALIDATE_SCORE_AWAY_SKICK     // Invalidate away spinning kick
+  INVALIDATE_SCORE_AWAY_HEAD      // Invalidate away head kick
+  INVALIDATE_SCORE_AWAY_THEAD     // Invalidate away turning head kick
+  INVALIDATE_PENALTY_AWAY         // Invalidate away penalty
+  
+  // Adjustment actions
+  ADJUST_SCORE                    // Adjust score
+  ADJUST_PENALTY                  // Adjust penalty
+  
+  // Video replay actions
+  VR_HOME_REQUEST                 // Home video replay request
+  VR_HOME_ACCEPTED                // Home video replay accepted
+  VR_HOME_REJECTED                // Home video replay rejected
+  VR_AWAY_REQUEST                 // Away video replay request
+  VR_AWAY_ACCEPTED                // Away video replay accepted
+  VR_AWAY_REJECTED                // Away video replay rejected
+}
+
+enum ActionSource {
+  HOME            // Home Athlete
+  AWAY            // Away Athlete
+  CR              // Center Referee
+}
+
+enum MedalType {
+  GOLD
+  SILVER
+  BRONZE
+}
+
+// ========================
+// ENUMS SPÉCIFIQUES COMMERCIAUX
+// ========================
+
+enum LicenseType {
+  ENTERPRISE
+  PROFESSIONAL
+  CLUB
+  PARTNER
+}
+
+enum LicenseStatus {
+  ACTIVE
+  EXPIRED
+  SUSPENDED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  BANK_TRANSFER
+  PAYPAL
+  INVOICE
+}
+
+enum BillingPeriod {
+  MONTHLY
+  ANNUAL
+  EVENT_BASED
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  PAST_DUE
+  UNPAID
+  TRIALING
+}
+
+enum SupportPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum SupportStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING_CUSTOMER
+  RESOLVED
+  CLOSED
+}
+
+// ========================
+// MODÈLES ALIGNÉS AVEC STANDARDS WT
+// ========================
+
+model Competition {
+  id            String     @id @default(cuid())
+  name          String     // Competition name per WT standard (e.g. "Muju 2023 World Taekwondo Championships")
+  hostCity      String     // Host city name (e.g. "Muju")
+  hostCountry   CountryCode // Host country code (e.g. "KOR")
+  location      String     // Venue name (e.g. "Taekwondowon T1 Arena")
+  startDate     DateTime
+  endDate       DateTime
+  dateFormat    String     @default("EEE dd MMM yyyy")
+  discipline    String?    // "Taekwondo Kyorugi", "Taekwondo Poomsae", etc.
+  grade         String?    // Competition rank (G1, G2, etc.)
+  isWT          Boolean    @default(false)
+  isPublic      Boolean    @default(true)
+  organizerId   String
+  createdById   String
+
+  // Relations
+  organizer     Organization @relation("CompetitionOrganizer", fields: [organizerId], references: [id])
+  createdBy     User         @relation("CompetitionCreated", fields: [createdById], references: [id])
+  events        Event[]
+  weighIns      WeighIn[]
+  sessions      Session[]
+}
+
+model Organization {
+  id               String    @id @default(cuid())
+  name             String    // Organization name (e.g. "World Taekwondo")
+  country          CountryCode // NOC Code (e.g. "KOR", "USA")
+  
+  // Commercial fields
+  billingEmail     String?
+  billingAddress   String?
+  vatNumber        String?
+  
+  // Relations
+  participants     Participant[]
+  competitors      Competitor[]
+  users            User[]
+  competitionsOrganized Competition[] @relation("CompetitionOrganizer")
+  // Commercial relations
+  licenses         License[]
+  subscriptions    Subscription[]
+  supportTickets   SupportTicket[]
+}
+
+model Event {
+  id             String        @id @default(cuid())
+  discipline     WTDiscipline
+  division       WTDivision
+  gender         Gender
+  name           String        // Full event name (e.g. "Men -68kg")
+  abbreviation   String        // Short event name (e.g. "M -68kg")
+  weightCategory String?       // Weight category (e.g. "M -68kg")
+  sportClass     String?       // Para sport class (e.g. "K44")
+  category       String?       // For Poomsae (e.g. "Individual")
+  role           String        // Role of athletes
+  competitionId  String
+  competitionType CompetitionType @default(ELIMINATION)
+  
+  // Relations
+  competition    Competition   @relation(fields: [competitionId], references: [id])
+  competitors    Competitor[]
+  matches        Match[]
+  medalWinners   MedalWinner[]
+  pools          Pool[]
+  poolConfig     EventPoolConfig?
+  poolToElimination PoolToElimination[]
+  // Commercial relations
+  eventFees      EventFee[]
+  commissions    Commission[]
+  licenseId      String?
+  license        License?      @relation("LicenseEvents", fields: [licenseId], references: [id])
+}
+
+model Session {
+  id             String     @id @default(cuid())
+  name           String
+  startTime      DateTime
+  endTime        DateTime
+  scheduleStatus ScheduleStatus
+  competitionId  String
+  
+  // Relations
+  competition    Competition @relation(fields: [competitionId], references: [id])
+  matches        Match[]
+}
+
+model Match {
+  id                String        @id @default(cuid())
+  mat               Int           // Mat number
+  number            String        // Match number (e.g. "101")
+  phase             MatchPhase
+  positionReference String        // Position in bracket (e.g. "R32-1")
+  scheduleStatus    String        // Align with WT ScheduleStatus
+  resultStatus      ResultStatus
+  resultDecision    VictoryType?
+  round             Int?          // Current round
+  roundTime         String?       // Current round time (MM:SS)
+  homeScore         Int?          // Home score
+  awayScore         Int?          // Away score
+  homePenalties     Int?          // Home penalties
+  awayPenalties     Int?          // Away penalties
+  scheduledStart    DateTime?     // Scheduled start
+  estimatedStart    DateTime?     // Estimated start (for delays)
+  actualStart       DateTime?     // Actual start time
+  eventId           String
+  sessionId         String
+  homeCompetitorId  String
+  awayCompetitorId  String
+  
+  // Relations
+  event             Event         @relation(fields: [eventId], references: [id])
+  session           Session       @relation(fields: [sessionId], references: [id])
+  homeCompetitor    Competitor    @relation("HomeCompetitor", fields: [homeCompetitorId], references: [id])
+  awayCompetitor    Competitor    @relation("AwayCompetitor", fields: [awayCompetitorId], references: [id])
+  results           MatchResult[]
+  actions           MatchAction[]
+  refereeAssignments MatchRefereeAssignment[]
+  equipmentAssignments MatchEquipmentAssignment[]
+  refereeAssignmentLogs RefereeAssignmentLog[]
+  
+  matchConfiguration MatchConfiguration?
+  poolMatch         PoolMatch?
+}
+
+model MatchConfiguration {
+  id                   String    @id @default(cuid())
+  matchId              String    @unique
+  rules                String    // "CONVENTIONAL", "BESTOF3"
+  rounds               Int       // Total number of regular rounds
+  roundTime            String    // Round time (MM:SS)
+  restTime             String    // Rest time (MM:SS)
+  injuryTime           String    // Injury time (MM:SS)
+  bodyThreshold        Int       // PSS body threshold 
+  headThreshold        Int       // PSS head threshold
+  homeVideoReplayQuota Int       // Video replay quota for home
+  awayVideoReplayQuota Int       // Video replay quota for away
+  goldenPointEnabled   Boolean   // Golden point enabled
+  goldenPointTime      String    // Golden point time (MM:SS)
+  maxDifference        Int       // Point gap threshold
+  maxPenalties         Int       // Maximum penalties
+  
+  // Relations
+  match                Match     @relation(fields: [matchId], references: [id])
+}
+
+model MatchResult {
+  id              String       @id @default(cuid())
+  matchId         String
+  status          ResultStatus
+  round           Int?         // For intermediate results
+  position        Int          // For sorting
+  winnerId        String?
+  loserId         String?
+  decision        VictoryType?
+  homeType ResultType?
+awayType ResultType?
+     // WIN, LOSS, TIE
+  homeScore       Int
+  awayScore       Int
+  homePenalties   Int
+  awayPenalties   Int
+  description     String?
+  timestamp       DateTime     @default(now())
+  
+  // Relations
+  match           Match        @relation(fields: [matchId], references: [id])
+}
+
+model MatchAction {
+  id              String       @id @default(cuid())
+  matchId         String
+  competitorId    String?
+  action          ActionType
+  type            String?      // e.g. "SCORE", "PENALTY", "GAMJEOM"
+  source          String?      // e.g. "PSS", "REFEREE" or ActionSource
+  value           Int?         // nombre de points
+  target          String?      // e.g. "HEAD", "TRUNK"
+  hitlevel        Int?         // Impact level
+  round           Int
+  roundTime       String?      // Time in round (MM:SS)
+  position        Int?         // Sequential position
+  homeScore       Int?         // Score after action
+  awayScore       Int?         // Score after action
+  homePenalties   Int?         // Penalties after action
+  awayPenalties   Int?         // Penalties after action
+  description     String?
+  timestamp       DateTime     @default(now())
+  
+  // Relations
+  match           Match        @relation(fields: [matchId], references: [id])
+  competitor      Competitor?  @relation(fields: [competitorId], references: [id])
+}
+
+model MatchRefereeAssignment {
+  id              String       @id @default(cuid())
+  matchId         String
+  refereeId       String?
+  role            OfficialRole
+  assignedAt      DateTime     @default(now())
+  
+  refJ1Id         String?
+  refJ2Id         String?
+  refJ3Id         String?
+  refCRId         String?
+  refRJId         String?
+  refTAId         String?
+  
+  // Relations
+  match           Match        @relation(fields: [matchId], references: [id])
+  referee         Participant? @relation("ParticipantReferee", fields: [refereeId], references: [id])
+  
+  refJ1           Participant? @relation("RefJ1", fields: [refJ1Id], references: [id])
+  refJ2           Participant? @relation("RefJ2", fields: [refJ2Id], references: [id])
+  refJ3           Participant? @relation("RefJ3", fields: [refJ3Id], references: [id])
+  refCR           Participant? @relation("RefCR", fields: [refCRId], references: [id])
+  refRJ           Participant? @relation("RefRJ", fields: [refRJId], references: [id])
+  refTA           Participant? @relation("RefTA", fields: [refTAId], references: [id])
+}
+
+model RefereeAssignmentLog {
+  id        String   @id @default(cuid())
+  matchId   String
+  refereeId String
+  role      OfficialRole
+  timestamp DateTime @default(now())
+
+  // Relations
+  match     Match     @relation(fields: [matchId], references: [id])
+  referee   Participant @relation(fields: [refereeId], references: [id])
+}
+
+model MatchEquipmentAssignment {
+  id              String       @id @default(cuid())
+  matchId         String
+  competitorId    String
+  chestSensorId   String
+  headSensorId    String
+  deviceType PssDeviceType? // "KPNP", "DAEDO"
+
+  
+  // Relations
+  match           Match        @relation(fields: [matchId], references: [id])
+  competitor      Competitor   @relation(fields: [competitorId], references: [id])
+}
+
+model Competitor {
+  id               String       @id @default(cuid())
+  competitorType   CompetitorType
+  printName        String       // Print Name (e.g. "JONES Jade")
+  printInitialName String       // Print Initial Name
+  tvName           String       // TV Name (e.g. "Jade JONES")
+  tvInitialName    String       // TV Initial Name (e.g. "J. JONES")
+  scoreboardName   String       // Scoreboard Name (e.g. "JONES J.")
+  rank             Int?         // Ranking position
+  seed             Int?         // Seeding position
+  country          CountryCode  // NOC Code
+  eventId          String
+  organizationId   String
+  
+  // Relations
+  event            Event        @relation(fields: [eventId], references: [id])
+  organization     Organization @relation(fields: [organizationId], references: [id])
+  participants     Participant[]
+  matchesHome      Match[]      @relation("HomeCompetitor")
+  matchesAway      Match[]      @relation("AwayCompetitor")
+  matchActions     MatchAction[]
+  equipmentAssignments MatchEquipmentAssignment[]
+  medalWinner      MedalWinner?
+  poolCompetitors  PoolCompetitor[]
+  poolStandings    PoolStanding[]
+  poolTransitions  PoolToElimination[]
+}
+
+model Participant {
+  id                  String            @id @default(cuid())
+  licenseNumber       String            @unique  // WT License Number (e.g. "KOR-4910")
+  galNumber           String?           // GAL WT number (if WT_GMS)
+  source              ParticipantSource @default(INTERNAL)
+  externalId          String?           // External optional link
+  givenName           String?           // Person's given name
+  familyName          String?           // Person's family name
+  passportGivenName   String            // Passport Given Name
+  passportFamilyName  String            // Passport Family Name
+  preferredGivenName  String            // Preferred Given Name
+  preferredFamilyName String            // Preferred Family Name
+  printName           String            // Print Name
+  printInitialName    String            // Print Initial Name
+  tvName              String            // TV Name
+  tvInitialName       String            // TV Initial Name
+  scoreboardName      String            // Scoreboard Name
+  gender              Gender
+  birthDate           DateTime          // Date of birth (YYYY-MM-DD)
+  mainRole            String            // ATHLETE, COACH, REFEREE, etc.
+  country             CountryCode       // NOC Code
+  organizationId      String
+  status              ParticipantStatus @default(REGISTERED)
+  
+  // Relations
+  organization        Organization      @relation(fields: [organizationId], references: [id])
+  competitors         Competitor[]
+  weighIns            WeighIn[]
+  payments            Payment[]
+
+  refereeAssignments  MatchRefereeAssignment[] @relation("ParticipantReferee") 
+  refereeAssignmentLogs RefereeAssignmentLog[]
+  refJ1Assignments    MatchRefereeAssignment[] @relation("RefJ1")
+  refJ2Assignments    MatchRefereeAssignment[] @relation("RefJ2")
+  refJ3Assignments    MatchRefereeAssignment[] @relation("RefJ3")
+  refCRAssignments    MatchRefereeAssignment[] @relation("RefCR")
+  refRJAssignments    MatchRefereeAssignment[] @relation("RefRJ")
+  refTAAssignments    MatchRefereeAssignment[] @relation("RefTA")
+  // Commercial relations
+  commissions         Commission[]
+}
+
+model WeighIn {
+  id              String         @id @default(cuid())
+  participantId   String
+  competitionId   String          // Ajouter ce champ pour lier à une compétition
+  status          WeighInStatus
+  weight          Float?         // Actual weight
+  attemptDate     DateTime
+  random          Boolean        @default(false)  // For random weigh-in
+  userId          String?
+  
+  // Relations
+  participant     Participant    @relation(fields: [participantId], references: [id])
+  competition     Competition    @relation(fields: [competitionId], references: [id])
+  user            User?          @relation(fields: [userId], references: [id])
+}
+
+model MedalWinner {
+  id              String         @id @default(cuid())
+  eventId         String
+  competitorId    String         @unique
+  medalType       MedalType
+  position        Int            // 1, 2, 3, etc.
+  
+  // Relations
+  event           Event          @relation(fields: [eventId], references: [id])
+  competitor      Competitor     @relation(fields: [competitorId], references: [id])
+}
+
+model User {
+  id              String         @id @default(cuid())
+  email           String         @unique
+  password        String
+  role            Role
+  language        String         @default("en")
+  deviceToken     String?
+  externalId      String?        @unique
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  isDeleted       Boolean        @default(false)
+  archivedAt      DateTime?
+  
+  // Relations
+  notifications   Notification[]
+  auditLogs       AuditLog[]
+  clubs           Club[]
+  organizationId  String?
+  organization    Organization?  @relation(fields: [organizationId], references: [id])
+  weighIns        WeighIn[]
+  competitionsCreated Competition[] @relation("CompetitionCreated")
+  // Support relations
+  ticketMessages  TicketMessage[]
+}
+
+model Club {
+  id              String         @id @default(cuid())
+  name            String
+  code            String         @unique
+  country         CountryCode
+  
+  // Relations
+  users           User[]
+}
+
+model Notification {
+  id              String          @id @default(cuid())
+  userId          String
+  type            NotificationType
+  title           String
+  body            String
+  seen            Boolean         @default(false)
+  createdAt       DateTime        @default(now())
+  
+  // Relations
+  user            User            @relation(fields: [userId], references: [id])
+}
+
+model AuditLog {
+  id              String          @id @default(cuid())
+  userId          String
+  action          AuditAction
+  timestamp       DateTime        @default(now())
+  
+  // Relations
+  user            User            @relation(fields: [userId], references: [id])
+}
+
+// ========================
+// MODÈLES DE SYSTÈME DE POOL
+// ========================
+
+model Pool {
+  id                String        @id @default(cuid())
+  eventId           String
+  event             Event         @relation(fields: [eventId], references: [id])
+  name              String        // e.g., "Pool A", "Pool B"
+  
+  // Configuration
+  maxAthletes       Int           // Maximum athletes per pool
+  matchesPerAthlete Int?          // Limit matches per athlete (optional)
+  pointsForWin      Int           @default(3)
+  pointsForDraw     Int           @default(1)
+  pointsForLoss     Int           @default(0)
+  qualifyingPlaces  Int           @default(2) // How many qualify (1st, 2 first, etc.)
+  
+  // Relations
+  competitors       PoolCompetitor[]
+  matches           PoolMatch[]
+  standings         PoolStanding[]
+  
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+}
+
+model PoolCompetitor {
+  id                String       @id @default(cuid())
+  poolId            String
+  competitorId      String
+  
+  // Relations
+  pool              Pool         @relation(fields: [poolId], references: [id])
+  competitor        Competitor   @relation(fields: [competitorId], references: [id])
+  
+  @@unique([poolId, competitorId])
+}
+
+model PoolMatch {
+  id                String       @id @default(cuid())
+  poolId            String
+  matchId           String       @unique
+  matchOrder        Int         
+  isCompleted       Boolean      @default(false)
+  
+  // Relations  
+  pool              Pool         @relation(fields: [poolId], references: [id])
+  match             Match        @relation(fields: [matchId], references: [id])
+  
+  @@index([poolId, matchOrder])
+}
+
+model PoolStanding {
+  id                String       @id @default(cuid())
+  poolId            String
+  competitorId      String
+  
+  // Statistics
+  matchesPlayed     Int          @default(0)
+  wins              Int          @default(0)
+  draws             Int          @default(0)
+  losses            Int          @default(0)
+  pointsFor         Int          @default(0)
+  pointsAgainst     Int          @default(0)
+  pointsDifference  Int          @default(0)
+  totalPoints       Int          @default(0) // Competition points (3 for win, 1 for draw)
+  
+  // Ranking
+  rank              Int?
+  qualified         Boolean      @default(false)
+  
+  // Relations
+  pool              Pool         @relation(fields: [poolId], references: [id])
+  competitor        Competitor   @relation(fields: [competitorId], references: [id])
+  
+  @@unique([poolId, competitorId])
+  @@index([poolId, rank])
+}
+
+model EventPoolConfig {
+  id                String      @id @default(cuid())
+  eventId           String      @unique
+  event             Event       @relation(fields: [eventId], references: [id])
+  
+  usePoolSystem     Boolean     @default(false)
+  minAthletesPerPool Int        @default(3)
+  maxAthletesPerPool Int        @default(5)
+  poolDistribution  String      // "EQUAL", "SEEDED", "RANDOM"
+  qualifyingPlaces  Int         @default(2)
+  tieBreakCriteria  String[]    // ["POINTS_DIFFERENCE", "HEAD_TO_HEAD", "POINTS_FOR"]
+  
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+}
+
+model PoolToElimination {
+  id                String      @id @default(cuid())
+  eventId           String
+  competitorId      String
+  poolRank          Int
+  eliminationSeed   Int
+  
+  // Relations
+  event             Event       @relation(fields: [eventId], references: [id])
+  competitor        Competitor  @relation(fields: [competitorId], references: [id])
+  
+  @@unique([eventId, competitorId])
+}
+
+// ========================
+// MODÈLES COMMERCIAUX
+// ========================
+
+model License {
+  id                String          @id @default(cuid())
+  key               String          @unique
+  type              LicenseType
+  status            LicenseStatus   @default(ACTIVE)
+  machineId         String          // Hardware fingerprint
+  activatedAt       DateTime?
+  expiresAt         DateTime?
+  lastVerifiedAt    DateTime?
+  
+  // Limits
+  maxEvents         Int
+  maxParticipants   Int
+  maxUsers          Int
+  
+  // Features
+  features          Json            // Stockage flexible des features
+  
+  // Relations
+  organizationId    String
+  organization      Organization    @relation(fields: [organizationId], references: [id])
+  
+  events            Event[]         @relation("LicenseEvents")
+  usageLogs         UsageLog[]
+  subscriptions     Subscription[]
+  
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+}
+
+model Subscription {
+  id                String             @id @default(cuid())
+  organizationId    String
+  licenseId         String
+  status            SubscriptionStatus @default(ACTIVE)
+  plan              LicenseType
+  billingPeriod     BillingPeriod
+  
+  // Pricing
+  basePrice         Float
+  eventPrice        Float              // Prix par événement
+  commissionRate    Float              // Taux de commission
+  
+  // Dates
+  startDate         DateTime
+  endDate           DateTime?
+  cancelledAt       DateTime?
+  
+  // Relations
+  organization      Organization       @relation(fields: [organizationId], references: [id])
+  license           License            @relation(fields: [licenseId], references: [id])
+  invoices          Invoice[]
+  
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+}
+
+model Invoice {
+  id                String             @id @default(cuid())
+  subscriptionId    String
+  status            InvoiceStatus      @default(DRAFT)
+  invoiceNumber     String             @unique
+  
+  // Amounts
+  subtotal          Float
+  tax               Float
+  total             Float
+  
+  // Details
+  billingPeriod     String             // Ex: "January 2024"
+  dueDate           DateTime
+  paidAt            DateTime?
+  
+  // Relations
+  subscription      Subscription       @relation(fields: [subscriptionId], references: [id])
+  lineItems         InvoiceLineItem[]
+  payments          Payment[]          @relation("InvoicePayments")
+  
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+}
+
+model InvoiceLineItem {
+  id                String             @id @default(cuid())
+  invoiceId         String
+  description       String
+  quantity          Int
+  unitPrice         Float
+  total             Float
+  
+  // Relations
+  invoice           Invoice            @relation(fields: [invoiceId], references: [id])
+}
+
+model EventFee {
+  id                String             @id @default(cuid())
+  eventId           String
+  amount            Float
+  description       String
+  paid              Boolean            @default(false)
+  
+  // Relations
+  event             Event              @relation(fields: [eventId], references: [id])
+  payment           Payment?           @relation
+  
+  createdAt         DateTime           @default(now())
+}
+
+model Payment {
+  id                String             @id @default(cuid())
+  amount            Float
+  currency          String             @default("EUR")
+  method            PaymentMethod
+  status            PaymentStatus
+  
+  // External references
+  stripePaymentId   String?
+  paypalOrderId     String?
+  
+  // Relations
+  participantId     String?
+  participant       Participant?       @relation(fields: [participantId], references: [id])
+  
+  invoiceId         String?
+  invoice           Invoice?           @relation("InvoicePayments", fields: [invoiceId], references: [id])
+  
+  eventFeeId        String?            @unique
+  eventFee          EventFee?          @relation(fields: [eventFeeId], references: [id])
+  
+  metadata          Json?
+  
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+}
+
+model Commission {
+  id                String             @id @default(cuid())
+  eventId           String
+  participantId     String
+  amount            Float
+  rate              Float              // Taux de commission appliqué
+  status            PaymentStatus
+  
+  // Relations
+  event             Event              @relation(fields: [eventId], references: [id])
+  participant       Participant        @relation(fields: [participantId], references: [id])
+  
+  createdAt         DateTime           @default(now())
+}
+
+model UsageLog {
+  id                String             @id @default(cuid())
+  licenseId         String
+  action            String             // Ex: "CREATE_EVENT", "EXPORT_PDF"
+  details           Json?
+  
+  // Relations
+  license           License            @relation(fields: [licenseId], references: [id])
+  
+  createdAt         DateTime           @default(now())
+}
+
+model SupportTicket {
+  id                String             @id @default(cuid())
+  organizationId    String
+  title             String
+  description       String
+  priority          SupportPriority    @default(NORMAL)
+  status            SupportStatus      @default(OPEN)
+  
+  // Relations
+  organization      Organization       @relation(fields: [organizationId], references: [id])
+  messages          TicketMessage[]
+  
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+}
+
+model TicketMessage {
+  id                String             @id @default(cuid())
+  ticketId          String
+  userId            String
+  message           String
+  isStaff           Boolean            @default(false)
+  
+  // Relations
+  ticket            SupportTicket      @relation(fields: [ticketId], references: [id])
+  user              User               @relation(fields: [userId], references: [id])
+  
+  createdAt         DateTime           @default(now())
+}
+
+// ========================
+// MODÈLES DE SYNCHRONISATION
+// ========================
+
+model SyncLog {
+  id                String             @id @default(cuid())
+  modelName         String             // Nom du modèle synchronisé
+  recordId          String             // ID de l'enregistrement synchronisé
+  direction         String             // "LOCAL_TO_CLOUD", "CLOUD_TO_LOCAL"
+  status            String             // "SUCCESS", "CONFLICT", "ERROR"
+  errorMessage      String?            // Message d'erreur si échec
+  conflictResolution String?           // "LOCAL_WINS", "CLOUD_WINS", "MANUAL"
+  
+  createdAt         DateTime           @default(now())
+  
+  @@index([modelName, recordId])
+  @@index([status, createdAt])
+}
+
+model SyncConfig {
+  id                String             @id @default(cuid())
+  modelName         String             @unique
+  enabled           Boolean            @default(true)
+  direction         String             // "LOCAL_TO_CLOUD", "CLOUD_TO_LOCAL", "BIDIRECTIONAL"
+  conflictStrategy  String             // "LOCAL_WINS", "CLOUD_WINS", "NEWEST_WINS", "MANUAL"
+  syncInterval      Int                // En minutes, 0 = manuel seulement
+  lastSyncedAt      DateTime?
+  
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+}
+
+// ========================
+// MODÈLES D'EXPORT/IMPRESSION
+// ========================
+
+model PrintTemplate {
+  id                String             @id @default(cuid())
+  name              String
+  code              String             @unique // P01, P02, etc. selon normes WT
+  format            String             // "A4", "A3", etc.
+  orientation       String             // "PORTRAIT", "LANDSCAPE"
+  template          String             // Chemin du fichier template ou contenu HTML/CSS
+  forDiscipline     WTDiscipline?
+  isWT              Boolean            @default(true) // Indique si c'est un template WT standard
+  isCustom          Boolean            @default(false)
+  
+  // Relations
+  printJobs         PrintJob[]
+  
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+}
+
+model PrintJob {
+  id                String             @id @default(cuid())
+  templateId        String
+  status            String             // "PENDING", "PROCESSING", "COMPLETED", "FAILED"
+  generatedFile     String?            // Chemin vers le fichier généré
+  parameters        Json?              // Paramètres utilisés pour générer l'impression
+  errorMessage      String?
+  
+  // Relations
+  template          PrintTemplate      @relation(fields: [templateId], references: [id])
+  
+  createdAt         DateTime           @default(now())
+  completedAt       DateTime?
+}

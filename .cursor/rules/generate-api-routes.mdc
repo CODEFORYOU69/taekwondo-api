@@ -1,0 +1,989 @@
+---
+description: Génère automatiquement les routes REST pour l’API Taekwondo, selon les modèles Prisma, avec Zod, Swagger, et structure controller/service/dto.
+globs: 
+alwaysApply: false
+---
+# Taekwondo API Generator Agent
+
+```yaml
+---
+description: Génère automatiquement la structure complète de l'API Taekwondo conforme aux normes WT/FFTDA
+globs: ["/src/**/*.ts", "/prisma/schema.prisma", "/swagger/**/*.json"]
+alwaysApply: false
+---
+```
+
+## Génération d'API Taekwondo
+
+Cet agent facilite la création d'une architecture complète d'API pour la plateforme de gestion de compétitions de Taekwondo, en suivant les normes WT/FFTDA.
+
+### Domaines à implémenter
+
+Pour chaque domaine métier, l'agent va générer:
+- Routes REST dans `/routes`
+- Contrôleurs dans `/controllers`
+- Services dans `/services`
+- Schémas DTO Zod dans `/dto`
+- Documentation Swagger dans `/swagger/openapi.json`
+
+### Structure de base
+
+```
+src/
+├── routes/                  # Définitions des endpoints REST
+│   ├── auth.routes.ts
+│   ├── competitions.routes.ts
+│   ├── events.routes.ts
+│   ├── matches.routes.ts
+│   ├── participants.routes.ts
+│   ├── weighins.routes.ts
+│   ├── pools.routes.ts
+│   ├── brackets.routes.ts
+│   ├── sync.routes.ts
+│   ├── notifications.routes.ts
+│   ├── print.routes.ts
+│   └── users.routes.ts
+├── controllers/             # Gestionnaires de requêtes
+│   ├── auth.controller.ts
+│   ├── competitions.controller.ts
+│   └── ...
+├── services/                # Logique métier
+│   ├── auth.service.ts
+│   ├── competitions.service.ts
+│   └── ...
+├── dto/                     # Validation avec Zod
+│   ├── auth/
+│   │   ├── login.dto.ts
+│   │   └── register.dto.ts
+│   ├── competitions/
+│   │   ├── create-competition.dto.ts
+│   │   └── update-competition.dto.ts
+│   └── ...
+└── interfaces/              # Interfaces TypeScript
+    ├── auth.interface.ts
+    ├── competition.interface.ts
+    └── ...
+```
+
+### Modèles de mise en œuvre
+
+#### 1. Route REST
+
+```typescript
+// src/routes/participants.routes.ts
+import { Router } from 'express';
+import { authMiddleware, roleMiddleware } from '../middleware/auth.middleware';
+import {
+  getAllParticipants,
+  getParticipantById,
+  createParticipant,
+  updateParticipant,
+  deleteParticipant,
+  registerParticipantToEvent
+} from '../controllers/participants.controller';
+
+const router = Router();
+
+/**
+ * @swagger
+ * /api/participants:
+ *   get:
+ *     summary: Retrieve all participants
+ *     tags: [Participants]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of participants
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Participant'
+ */
+router.get('/', authMiddleware, getAllParticipants);
+
+/**
+ * @swagger
+ * /api/participants/{id}:
+ *   get:
+ *     summary: Get participant by ID
+ *     tags: [Participants]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Participant details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Participant'
+ */
+router.get('/:id', authMiddleware, getParticipantById);
+
+/**
+ * @swagger
+ * /api/participants:
+ *   post:
+ *     summary: Create a new participant
+ *     tags: [Participants]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateParticipantDto'
+ *     responses:
+ *       201:
+ *         description: Participant created
+ */
+router.post('/', 
+  authMiddleware, 
+  roleMiddleware(['admin', 'federation', 'club']), 
+  createParticipant
+);
+
+/**
+ * @swagger
+ * /api/participants/{id}:
+ *   put:
+ *     summary: Update a participant
+ *     tags: [Participants]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateParticipantDto'
+ *     responses:
+ *       200:
+ *         description: Participant updated
+ */
+router.put('/:id', 
+  authMiddleware, 
+  roleMiddleware(['admin', 'federation', 'club']), 
+  updateParticipant
+);
+
+/**
+ * @swagger
+ * /api/participants/{id}:
+ *   delete:
+ *     summary: Delete a participant
+ *     tags: [Participants]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       204:
+ *         description: Participant deleted
+ */
+router.delete('/:id', 
+  authMiddleware, 
+  roleMiddleware(['admin', 'federation']), 
+  deleteParticipant
+);
+
+/**
+ * @swagger
+ * /api/participants/{id}/register-event:
+ *   post:
+ *     summary: Register participant to an event
+ *     tags: [Participants]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               eventId:
+ *                 type: string
+ *             required:
+ *               - eventId
+ *     responses:
+ *       200:
+ *         description: Participant registered to event
+ */
+router.post('/:id/register-event', 
+  authMiddleware, 
+  roleMiddleware(['admin', 'federation', 'club']), 
+  registerParticipantToEvent
+);
+
+export const participantsRoutes = router;
+```
+
+#### 2. Controller
+
+```typescript
+// src/controllers/participants.controller.ts
+import { Request, Response, NextFunction } from 'express';
+import { ParticipantService } from '../services/participant.service';
+import { createParticipantSchema, updateParticipantSchema } from '../dto/participants';
+import { TokenPayload } from '../interfaces/auth.interface';
+
+// Récupérer tous les participants
+export const getAllParticipants = async (
+  req: Request, 
+  res: Response, 
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const participants = await ParticipantService.getAllParticipants();
+    res.status(200).json(participants);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Récupérer un participant par ID
+export const getParticipantById = async (
+  req: Request, 
+  res: Response, 
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const participant = await ParticipantService.getParticipantById(id);
+    
+    if (!participant) {
+      res.status(404).json({ message: 'Participant non trouvé' });
+      return;
+    }
+    
+    res.status(200).json(participant);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Créer un nouveau participant
+export const createParticipant = async (
+  req: Request & { user?: TokenPayload }, 
+  res: Response, 
+  next: NextFunction
+): Promise<void> => {
+  try {
+    // Validation Zod
+    const validationResult = createParticipantSchema.safeParse(req.body);
+    
+    if (!validationResult.success) {
+      res.status(400).json({ 
+        message: 'Données invalides', 
+        errors: validationResult.error.errors 
+      });
+      return;
+    }
+    
+    const participant = await ParticipantService.createParticipant(
+      validationResult.data,
+      req.user?.userId
+    );
+    
+    res.status(201).json(participant);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Mettre à jour un participant
+export const updateParticipant = async (
+  req: Request, 
+  res: Response, 
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    
+    // Validation Zod
+    const validationResult = updateParticipantSchema.safeParse(req.body);
+    
+    if (!validationResult.success) {
+      res.status(400).json({ 
+        message: 'Données invalides', 
+        errors: validationResult.error.errors 
+      });
+      return;
+    }
+    
+    const participant = await ParticipantService.updateParticipant(
+      id, 
+      validationResult.data
+    );
+    
+    if (!participant) {
+      res.status(404).json({ message: 'Participant non trouvé' });
+      return;
+    }
+    
+    res.status(200).json(participant);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Supprimer un participant
+export const deleteParticipant = async (
+  req: Request, 
+  res: Response, 
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    
+    await ParticipantService.deleteParticipant(id);
+    
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Inscrire un participant à un événement
+export const registerParticipantToEvent = async (
+  req: Request, 
+  res: Response, 
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const { eventId } = req.body;
+    
+    if (!eventId) {
+      res.status(400).json({ message: 'eventId est requis' });
+      return;
+    }
+    
+    const result = await ParticipantService.registerToEvent(id, eventId);
+    
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+```
+
+#### 3. Service
+
+```typescript
+// src/services/participant.service.ts
+import prisma from '../config/database';
+import { ApiError } from '../interfaces/error.interface';
+import { CreateParticipantDto, UpdateParticipantDto } from '../dto/participants';
+
+export class ParticipantService {
+  /**
+   * Récupérer tous les participants
+   */
+  static async getAllParticipants() {
+    return prisma.participant.findMany({
+      include: {
+        organization: true,
+        competitors: true
+      }
+    });
+  }
+
+  /**
+   * Récupérer un participant par ID
+   */
+  static async getParticipantById(id: string) {
+    return prisma.participant.findUnique({
+      where: { id },
+      include: {
+        organization: true,
+        competitors: true,
+        weighIns: true
+      }
+    });
+  }
+
+  /**
+   * Créer un nouveau participant
+   */
+  static async createParticipant(data: CreateParticipantDto, createdById: string) {
+    try {
+      // Vérification si le numéro de licence existe déjà
+      const existingParticipant = await prisma.participant.findUnique({
+        where: { licenseNumber: data.licenseNumber }
+      });
+
+      if (existingParticipant) {
+        const error = new Error('Ce numéro de licence est déjà utilisé') as ApiError;
+        error.statusCode = 400;
+        throw error;
+      }
+
+      // Création du participant avec noms au format WT
+      return prisma.participant.create({
+        data: {
+          licenseNumber: data.licenseNumber,
+          passportGivenName: data.passportGivenName,
+          passportFamilyName: data.passportFamilyName.toUpperCase(), // Standard WT: Nom de famille en MAJUSCULES
+          preferredGivenName: data.preferredGivenName,
+          preferredFamilyName: data.preferredFamilyName,
+          printName: `${data.passportFamilyName.toUpperCase()} ${data.passportGivenName}`,
+          printInitialName: `${data.passportFamilyName.toUpperCase()} ${data.passportGivenName.charAt(0)}.`,
+          tvName: `${data.passportGivenName} ${data.passportFamilyName.toUpperCase()}`,
+          tvInitialName: `${data.passportGivenName.charAt(0)}. ${data.passportFamilyName.toUpperCase()}`,
+          scoreboardName: `${data.passportFamilyName.toUpperCase()} ${data.passportGivenName.charAt(0)}.`,
+          gender: data.gender,
+          birthDate: new Date(data.birthDate),
+          mainRole: data.mainRole,
+          country: data.country,
+          galNumber: data.galNumber,
+          source: data.source || 'INTERNAL',
+          status: data.status || 'REGISTERED',
+          organization: {
+            connect: { id: data.organizationId }
+          }
+        }
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * Mettre à jour un participant
+   */
+  static async updateParticipant(id: string, data: UpdateParticipantDto) {
+    try {
+      // Vérifier si le participant existe
+      const participant = await prisma.participant.findUnique({
+        where: { id }
+      });
+
+      if (!participant) {
+        return null;
+      }
+
+      // Préparer les données de mise à jour
+      const updateData: any = { ...data };
+      
+      // Mettre à jour les formats de noms standards WT si les noms ont changé
+      if (data.passportFamilyName || data.passportGivenName) {
+        const familyName = data.passportFamilyName?.toUpperCase() || participant.passportFamilyName;
+        const givenName = data.passportGivenName || participant.passportGivenName;
+        
+        updateData.printName = `${familyName} ${givenName}`;
+        updateData.printInitialName = `${familyName} ${givenName.charAt(0)}.`;
+        updateData.tvName = `${givenName} ${familyName}`;
+        updateData.tvInitialName = `${givenName.charAt(0)}. ${familyName}`;
+        updateData.scoreboardName = `${familyName} ${givenName.charAt(0)}.`;
+      }
+
+      return prisma.participant.update({
+        where: { id },
+        data: updateData
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * Supprimer un participant
+   */
+  static async deleteParticipant(id: string) {
+    try {
+      return prisma.participant.delete({
+        where: { id }
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * Inscrire un participant à un événement
+   */
+  static async registerToEvent(participantId: string, eventId: string) {
+    try {
+      // Vérifier si le participant et l'événement existent
+      const [participant, event] = await Promise.all([
+        prisma.participant.findUnique({ where: { id: participantId } }),
+        prisma.event.findUnique({ where: { id: eventId } })
+      ]);
+
+      if (!participant) {
+        const error = new Error('Participant non trouvé') as ApiError;
+        error.statusCode = 404;
+        throw error;
+      }
+
+      if (!event) {
+        const error = new Error('Événement non trouvé') as ApiError;
+        error.statusCode = 404;
+        throw error;
+      }
+
+      // Créer un competitor pour ce participant dans cet événement
+      const competitor = await prisma.competitor.create({
+        data: {
+          competitorType: 'A', // Athlète individuel
+          printName: participant.printName,
+          printInitialName: participant.printInitialName,
+          tvName: participant.tvName,
+          tvInitialName: participant.tvInitialName,
+          scoreboardName: participant.scoreboardName,
+          country: participant.country,
+          event: {
+            connect: { id: eventId }
+          },
+          organization: {
+            connect: { id: participant.organizationId }
+          },
+          participants: {
+            connect: { id: participantId }
+          }
+        }
+      });
+
+      return competitor;
+    } catch (error) {
+      throw error;
+    }
+  }
+}
+```
+
+#### 4. DTO avec Zod
+
+```typescript
+// src/dto/participants/create-participant.dto.ts
+import { z } from 'zod';
+import { Gender, CountryCode, ParticipantStatus, ParticipantSource } from '@prisma/client';
+
+// Convertir les enums Prisma en enums Zod
+const GenderEnum = z.nativeEnum(Gender);
+const CountryCodeEnum = z.nativeEnum(CountryCode);
+const ParticipantStatusEnum = z.nativeEnum(ParticipantStatus);
+const ParticipantSourceEnum = z.nativeEnum(ParticipantSource);
+
+export const createParticipantSchema = z.object({
+  licenseNumber: z.string().min(3).max(20),
+  passportGivenName: z.string().min(2).max(50),
+  passportFamilyName: z.string().min(2).max(50),
+  preferredGivenName: z.string().min(2).max(50),
+  preferredFamilyName: z.string().min(2).max(50),
+  gender: GenderEnum,
+  birthDate: z.string().refine((date) => {
+    // Validation de la date de naissance (âge minimum, format, etc.)
+    const birthDate = new Date(date);
+    return !isNaN(birthDate.getTime());
+  }, { message: "Format de date invalide" }),
+  mainRole: z.string(),
+  country: CountryCodeEnum,
+  organizationId: z.string(),
+  galNumber: z.string().optional(),
+  source: ParticipantSourceEnum.optional(),
+  status: ParticipantStatusEnum.optional(),
+});
+
+export type CreateParticipantDto = z.infer<typeof createParticipantSchema>;
+
+// src/dto/participants/update-participant.dto.ts
+export const updateParticipantSchema = z.object({
+  licenseNumber: z.string().min(3).max(20).optional(),
+  passportGivenName: z.string().min(2).max(50).optional(),
+  passportFamilyName: z.string().min(2).max(50).optional(),
+  preferredGivenName: z.string().min(2).max(50).optional(),
+  preferredFamilyName: z.string().min(2).max(50).optional(),
+  gender: GenderEnum.optional(),
+  birthDate: z.string().optional(),
+  mainRole: z.string().optional(),
+  country: CountryCodeEnum.optional(),
+  organizationId: z.string().optional(),
+  galNumber: z.string().optional(),
+  status: ParticipantStatusEnum.optional(),
+});
+
+export type UpdateParticipantDto = z.infer<typeof updateParticipantSchema>;
+```
+
+#### 5. Swagger Documentation
+
+```json
+// swagger/openapi.json (extrait pour les participants)
+{
+  "paths": {
+    "/api/participants": {
+      "get": {
+        "summary": "Retrieve all participants",
+        "tags": ["Participants"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "List of participants",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Participant"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new participant",
+        "tags": ["Participants"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateParticipantDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Participant created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Participant"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/participants/{id}": {
+      "get": {
+        "summary": "Get participant by ID",
+        "tags": ["Participants"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Participant ID"
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Participant details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Participant"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Participant not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a participant",
+        "tags": ["Participants"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Participant ID"
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateParticipantDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Participant updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Participant"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a participant",
+        "tags": ["Participants"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Participant ID"
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "204": {
+            "description": "Participant deleted"
+          }
+        }
+      }
+    },
+    "/api/participants/{id}/register-event": {
+      "post": {
+        "summary": "Register participant to an event",
+        "tags": ["Participants"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Participant ID"
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "eventId": {
+                    "type": "string"
+                  }
+                },
+                "required": ["eventId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Participant registered to event",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Competitor"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Participant": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "licenseNumber": {
+            "type": "string"
+          },
+          "passportGivenName": {
+            "type": "string"
+          },
+          "passportFamilyName": {
+            "type": "string"
+          },
+          "printName": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string",
+            "enum": ["MALE", "FEMALE", "MIXED"]
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "country": {
+            "type": "string",
+            "enum": ["FRA", "KOR", "USA"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["REGISTERED", "WITHDRAWN", "DISQUALIFIED", "INJURED", "NO_SHOW"]
+          }
+        }
+      },
+      "CreateParticipantDto": {
+        "type": "object",
+        "properties": {
+          "licenseNumber": {
+            "type": "string",
+            "example": "FRA-12345"
+          },
+          "passportGivenName": {
+            "type": "string",
+            "example": "Marie"
+          },
+          "passportFamilyName": {
+            "type": "string",
+            "example": "DUPONT"
+          },
+          "preferredGivenName": {
+            "type": "string",
+            "example": "Marie"
+          },
+          "preferredFamilyName": {
+            "type": "string",
+            "example": "Dupont"
+          },
+          "gender": {
+            "type": "string",
+            "enum": ["MALE", "FEMALE", "MIXED"],
+            "example": "FEMALE"
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2000-01-15T00:00:00Z"
+          },
+          "mainRole": {
+            "type": "string",
+            "example": "ATHLETE"
+          },
+          "country": {
+            "type": "string",
+            "enum": ["FRA", "KOR", "USA"],
+            "example": "FRA"
+          },
+          "organizationId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "licenseNumber",
+          "passportGivenName",
+          "passportFamilyName",
+          "preferredGivenName",
+          "preferredFamilyName",
+          "gender",
+          "birthDate",
+          "mainRole",
+          "country",
+          "organizationId"
+        ]
+      }
+    }
+  }
+}
+```
+
+### Autres domaines
+
+Pour tous les autres domaines (compétitions, événements, matchs, etc.), suivez le même modèle avec:
+
+1. **Routes REST**: Routes avec méthodes GET, POST, PUT, DELETE
+2. **Contrôleurs**: Logique de gestion des requêtes HTTP
+3. **Services**: Logique métier et opérations de base de données
+4. **DTOs**: Validation d'entrée avec Zod
+5. **Documentation**: Swagger OpenAPI
+
+Chaque domaine doit respecter les standards WT/FFTDA et implémenter toutes les opérations nécessaires pour la plateforme de gestion des compétitions de Taekwondo.

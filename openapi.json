@@ -1,0 +1,3751 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Taekwondo",
+    "description": "API pour la gestion des compétitions de Taekwondo avec synchronisation hors-ligne",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Support API Taekwondo"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3001/api",
+      "description": "Serveur de développement"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "error"
+          },
+          "statusCode": {
+            "type": "integer",
+            "example": 400
+          },
+          "message": {
+            "type": "string",
+            "example": "Message d'erreur"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "clg7h9bk40000apcgf4jkld5n"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "user@example.com"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "super_admin",
+              "admin",
+              "federation",
+              "club",
+              "coach",
+              "spectator"
+            ],
+            "example": "club"
+          },
+          "firstName": {
+            "type": "string",
+            "example": "John"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "Doe"
+          },
+          "language": {
+            "type": "string",
+            "example": "fr"
+          }
+        }
+      },
+      "Competition": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "clg7h9bk40001apcgf4jkld5n"
+          },
+          "name": {
+            "type": "string",
+            "example": "Championnat de France 2024"
+          },
+          "hostCity": {
+            "type": "string",
+            "example": "Paris"
+          },
+          "hostCountry": {
+            "type": "string",
+            "example": "FRA"
+          },
+          "location": {
+            "type": "string",
+            "example": "AccorHotels Arena"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-07-10T09:00:00Z"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-07-12T18:00:00Z"
+          },
+          "dateFormat": {
+            "type": "string",
+            "example": "EEE dd MMM yyyy"
+          },
+          "discipline": {
+            "type": "string",
+            "example": "Taekwondo Kyorugi"
+          },
+          "grade": {
+            "type": "string",
+            "example": "G1"
+          },
+          "isWT": {
+            "type": "boolean",
+            "example": false
+          },
+          "isPublic": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "Participant": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "licenseNumber": {
+            "type": "string",
+            "example": "FRA-12345"
+          },
+          "galNumber": {
+            "type": "string",
+            "example": "KOR-9876"
+          },
+          "source": {
+            "type": "string",
+            "enum": ["WT_GMS", "INTERNAL"],
+            "example": "INTERNAL"
+          },
+          "passportGivenName": {
+            "type": "string",
+            "example": "Marie"
+          },
+          "passportFamilyName": {
+            "type": "string",
+            "example": "DUPONT"
+          },
+          "preferredGivenName": {
+            "type": "string",
+            "example": "Marie"
+          },
+          "preferredFamilyName": {
+            "type": "string",
+            "example": "Dupont"
+          },
+          "printName": {
+            "type": "string",
+            "example": "DUPONT Marie"
+          },
+          "tvName": {
+            "type": "string",
+            "example": "Marie DUPONT"
+          },
+          "gender": {
+            "type": "string",
+            "enum": ["MALE", "FEMALE", "MIXED"],
+            "example": "FEMALE"
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2000-01-15T00:00:00Z"
+          },
+          "mainRole": {
+            "type": "string",
+            "example": "ATHLETE"
+          },
+          "country": {
+            "type": "string",
+            "enum": [
+              "FRA",
+              "KOR",
+              "USA",
+              "ESP",
+              "GER",
+              "ITA",
+              "GBR",
+              "TUR",
+              "BRA",
+              "CAN",
+              "MEX",
+              "JPN",
+              "CHN",
+              "IND",
+              "NED",
+              "SWE",
+              "POL",
+              "BEL",
+              "ARG",
+              "AUS"
+            ],
+            "example": "FRA"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "REGISTERED",
+              "WITHDRAWN",
+              "DISQUALIFIED",
+              "INJURED",
+              "NO_SHOW"
+            ],
+            "example": "REGISTERED"
+          },
+          "organizationId": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateParticipantDto": {
+        "type": "object",
+        "properties": {
+          "licenseNumber": {
+            "type": "string",
+            "example": "FRA-12345"
+          },
+          "passportGivenName": {
+            "type": "string",
+            "example": "Marie"
+          },
+          "passportFamilyName": {
+            "type": "string",
+            "example": "DUPONT"
+          },
+          "preferredGivenName": {
+            "type": "string",
+            "example": "Marie"
+          },
+          "preferredFamilyName": {
+            "type": "string",
+            "example": "Dupont"
+          },
+          "gender": {
+            "type": "string",
+            "enum": ["MALE", "FEMALE", "MIXED"],
+            "example": "FEMALE"
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2000-01-15T00:00:00Z"
+          },
+          "mainRole": {
+            "type": "string",
+            "example": "ATHLETE"
+          },
+          "country": {
+            "type": "string",
+            "enum": [
+              "FRA",
+              "KOR",
+              "USA",
+              "ESP",
+              "GER",
+              "ITA",
+              "GBR",
+              "TUR",
+              "BRA",
+              "CAN",
+              "MEX",
+              "JPN",
+              "CHN",
+              "IND",
+              "NED",
+              "SWE",
+              "POL",
+              "BEL",
+              "ARG",
+              "AUS"
+            ],
+            "example": "FRA"
+          },
+          "organizationId": {
+            "type": "string"
+          },
+          "galNumber": {
+            "type": "string",
+            "example": "KOR-9876"
+          },
+          "source": {
+            "type": "string",
+            "enum": ["WT_GMS", "INTERNAL"],
+            "example": "INTERNAL"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "REGISTERED",
+              "WITHDRAWN",
+              "DISQUALIFIED",
+              "INJURED",
+              "NO_SHOW"
+            ],
+            "example": "REGISTERED"
+          }
+        },
+        "required": [
+          "licenseNumber",
+          "passportGivenName",
+          "passportFamilyName",
+          "preferredGivenName",
+          "preferredFamilyName",
+          "gender",
+          "birthDate",
+          "mainRole",
+          "country",
+          "organizationId"
+        ]
+      },
+      "UpdateParticipantDto": {
+        "type": "object",
+        "properties": {
+          "licenseNumber": {
+            "type": "string",
+            "example": "FRA-12345"
+          },
+          "passportGivenName": {
+            "type": "string",
+            "example": "Marie"
+          },
+          "passportFamilyName": {
+            "type": "string",
+            "example": "DUPONT"
+          },
+          "preferredGivenName": {
+            "type": "string",
+            "example": "Marie"
+          },
+          "preferredFamilyName": {
+            "type": "string",
+            "example": "Dupont"
+          },
+          "gender": {
+            "type": "string",
+            "enum": ["MALE", "FEMALE", "MIXED"],
+            "example": "FEMALE"
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2000-01-15T00:00:00Z"
+          },
+          "mainRole": {
+            "type": "string",
+            "example": "ATHLETE"
+          },
+          "country": {
+            "type": "string",
+            "enum": [
+              "FRA",
+              "KOR",
+              "USA",
+              "ESP",
+              "GER",
+              "ITA",
+              "GBR",
+              "TUR",
+              "BRA",
+              "CAN",
+              "MEX",
+              "JPN",
+              "CHN",
+              "IND",
+              "NED",
+              "SWE",
+              "POL",
+              "BEL",
+              "ARG",
+              "AUS"
+            ],
+            "example": "FRA"
+          },
+          "organizationId": {
+            "type": "string"
+          },
+          "galNumber": {
+            "type": "string",
+            "example": "KOR-9876"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "REGISTERED",
+              "WITHDRAWN",
+              "DISQUALIFIED",
+              "INJURED",
+              "NO_SHOW"
+            ],
+            "example": "REGISTERED"
+          }
+        }
+      },
+      "WeighIn": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "participantId": {
+            "type": "string"
+          },
+          "weight": {
+            "type": "number",
+            "format": "float",
+            "example": 68.4
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "NOT_ATTEMPTED",
+              "FIRST_FAILED",
+              "SECOND_FAILED",
+              "VALIDATED",
+              "SURCLASSED"
+            ],
+            "example": "VALIDATED"
+          },
+          "attemptDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "competitionId": {
+            "type": "string"
+          },
+          "random": {
+            "type": "boolean",
+            "example": false
+          }
+        }
+      },
+      "WeighInDto": {
+        "type": "object",
+        "properties": {
+          "weight": {
+            "type": "number",
+            "format": "float",
+            "example": 68.4
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "NOT_ATTEMPTED",
+              "FIRST_FAILED",
+              "SECOND_FAILED",
+              "VALIDATED",
+              "SURCLASSED"
+            ],
+            "example": "VALIDATED"
+          },
+          "attemptDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["weight", "status"]
+      },
+      "CreateWeighInDto": {
+        "type": "object",
+        "properties": {
+          "weight": {
+            "type": "number",
+            "format": "float",
+            "example": 68.4
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "NOT_ATTEMPTED",
+              "FIRST_FAILED",
+              "SECOND_FAILED",
+              "VALIDATED",
+              "SURCLASSED"
+            ],
+            "example": "VALIDATED"
+          },
+          "attemptDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "competitionId": {
+            "type": "string"
+          },
+          "random": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": ["weight", "status"]
+      },
+      "UpdateWeighInDto": {
+        "type": "object",
+        "properties": {
+          "weight": {
+            "type": "number",
+            "format": "float",
+            "example": 68.4
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "NOT_ATTEMPTED",
+              "FIRST_FAILED",
+              "SECOND_FAILED",
+              "VALIDATED",
+              "SURCLASSED"
+            ],
+            "example": "VALIDATED"
+          },
+          "attemptDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "random": {
+            "type": "boolean",
+            "example": false
+          }
+        }
+      },
+      "Competitor": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "competitorType": {
+            "type": "string",
+            "enum": ["A", "T"],
+            "example": "A"
+          },
+          "printName": {
+            "type": "string",
+            "example": "DUPONT Marie"
+          },
+          "tvName": {
+            "type": "string",
+            "example": "Marie DUPONT"
+          },
+          "country": {
+            "type": "string",
+            "enum": [
+              "FRA",
+              "KOR",
+              "USA",
+              "ESP",
+              "GER",
+              "ITA",
+              "GBR",
+              "TUR",
+              "BRA",
+              "CAN",
+              "MEX",
+              "JPN",
+              "CHN",
+              "IND",
+              "NED",
+              "SWE",
+              "POL",
+              "BEL",
+              "ARG",
+              "AUS"
+            ],
+            "example": "FRA"
+          },
+          "eventId": {
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateCompetitorDto": {
+        "type": "object",
+        "properties": {
+          "competitorType": {
+            "type": "string",
+            "enum": ["A", "T"]
+          },
+          "printName": {
+            "type": "string",
+            "example": "DUPONT Marie"
+          },
+          "tvName": {
+            "type": "string",
+            "example": "Marie DUPONT"
+          },
+          "country": {
+            "type": "string",
+            "enum": [
+              "FRA",
+              "KOR",
+              "USA",
+              "ESP",
+              "GER",
+              "ITA",
+              "GBR",
+              "TUR",
+              "BRA",
+              "CAN",
+              "MEX",
+              "JPN",
+              "CHN",
+              "IND",
+              "NED",
+              "SWE",
+              "POL",
+              "BEL",
+              "ARG",
+              "AUS"
+            ],
+            "example": "FRA"
+          },
+          "eventId": {
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "competitorType",
+          "printName",
+          "tvName",
+          "country",
+          "eventId"
+        ]
+      },
+      "UpdateCompetitorDto": {
+        "type": "object",
+        "properties": {
+          "competitorType": {
+            "type": "string",
+            "enum": ["A", "T"]
+          },
+          "printName": {
+            "type": "string",
+            "example": "DUPONT Marie"
+          },
+          "tvName": {
+            "type": "string",
+            "example": "Marie DUPONT"
+          },
+          "country": {
+            "type": "string",
+            "enum": [
+              "FRA",
+              "KOR",
+              "USA",
+              "ESP",
+              "GER",
+              "ITA",
+              "GBR",
+              "TUR",
+              "BRA",
+              "CAN",
+              "MEX",
+              "JPN",
+              "CHN",
+              "IND",
+              "NED",
+              "SWE",
+              "POL",
+              "BEL",
+              "ARG",
+              "AUS"
+            ],
+            "example": "FRA"
+          },
+          "eventId": {
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "competitorType",
+          "printName",
+          "tvName",
+          "country",
+          "eventId"
+        ]
+      },
+      "Event": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "CreateEventDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "organizerId": {
+          "type": "string"
+        }
+      },
+      "required": ["name", "startDate", "endDate", "organizerId"]
+    },
+    "UpdateEventDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "organizerId": {
+          "type": "string"
+        }
+      },
+      "required": ["name", "startDate", "endDate", "organizerId"]
+    },
+    "EventPoolConfigDto": {
+      "type": "object",
+      "properties": {
+        "poolSize": {
+          "type": "number"
+        }
+      }
+    },
+    "MedalWinner": {
+      "type": "object",
+      "properties": {
+        "competitorId": {
+          "type": "string"
+        }
+      }
+    },
+    "MedalWinnerDto": {
+      "type": "object",
+      "properties": {
+        "medal": {
+          "type": "string",
+          "enum": ["GOLD", "SILVER", "BRONZE"]
+        }
+      }
+    },
+    "License": {
+      "type": "object",
+      "properties": {
+        "license": {
+          "type": "string"
+        }
+      }
+    },
+    "LicenseDto": {
+      "type": "object",
+      "properties": {
+        "license": {
+          "type": "string"
+        }
+      }
+    },
+    "LicenseUpdateDto": {
+      "type": "object",
+      "properties": {
+        "license": {
+          "type": "string"
+        }
+      }
+    },
+    "LicenseCreateDto": {
+      "type": "object",
+      "properties": {
+        "license": {
+          "type": "string"
+        }
+      }
+    },
+    "LicenseDeleteDto": {
+      "type": "object",
+      "properties": {
+        "license": {
+          "type": "string"
+        }
+      }
+    },
+    "responses": {
+      "Unauthorized": {
+        "description": "Authentification requise",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Inscription d'un nouvel utilisateur",
+        "tags": ["Authentification"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "user@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "password123"
+                  },
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "super_admin",
+                      "admin",
+                      "federation",
+                      "club",
+                      "coach",
+                      "spectator"
+                    ],
+                    "example": "club"
+                  },
+                  "firstName": {
+                    "type": "string",
+                    "example": "John"
+                  },
+                  "lastName": {
+                    "type": "string",
+                    "example": "Doe"
+                  },
+                  "language": {
+                    "type": "string",
+                    "example": "fr"
+                  },
+                  "organizationId": {
+                    "type": "string",
+                    "example": "clg7h9bk40002apcgf4jkld5n"
+                  }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Utilisateur créé avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    },
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Données invalides",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Connexion d'un utilisateur",
+        "tags": ["Authentification"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "user@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "password123"
+                  }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Connexion réussie",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    },
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Identifiants incorrects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "summary": "Récupérer les informations de l'utilisateur connecté",
+        "tags": ["Authentification"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Informations de l'utilisateur",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Non authentifié",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/competitions": {
+      "get": {
+        "summary": "Récupérer toutes les compétitions",
+        "tags": ["Compétitions"],
+        "responses": {
+          "200": {
+            "description": "Liste des compétitions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Competition"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer une nouvelle compétition",
+        "tags": ["Compétitions"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Championnat de France 2024"
+                  },
+                  "hostCity": {
+                    "type": "string",
+                    "example": "Paris"
+                  },
+                  "hostCountry": {
+                    "type": "string",
+                    "example": "FRA"
+                  },
+                  "location": {
+                    "type": "string",
+                    "example": "AccorHotels Arena"
+                  },
+                  "startDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2024-07-10T09:00:00Z"
+                  },
+                  "endDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2024-07-12T18:00:00Z"
+                  },
+                  "dateFormat": {
+                    "type": "string",
+                    "example": "EEE dd MMM yyyy"
+                  },
+                  "discipline": {
+                    "type": "string",
+                    "example": "Taekwondo Kyorugi"
+                  },
+                  "grade": {
+                    "type": "string",
+                    "example": "G1"
+                  },
+                  "isWT": {
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "isPublic": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "organizerId": {
+                    "type": "string",
+                    "example": "clg7h9bk40002apcgf4jkld5n"
+                  }
+                },
+                "required": [
+                  "name",
+                  "hostCity",
+                  "hostCountry",
+                  "location",
+                  "startDate",
+                  "endDate",
+                  "organizerId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Compétition créée avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Competition"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Non authentifié",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Données invalides",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/competitions/{id}": {
+      "get": {
+        "summary": "Récupérer une compétition par son ID",
+        "tags": ["Compétitions"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de la compétition"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Détails de la compétition",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Competition"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Compétition non trouvée",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour une compétition",
+        "tags": ["Compétitions"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de la compétition"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Championnat de France 2024 - Édition spéciale"
+                  },
+                  "hostCity": {
+                    "type": "string",
+                    "example": "Lyon"
+                  },
+                  "hostCountry": {
+                    "type": "string",
+                    "example": "FRA"
+                  },
+                  "location": {
+                    "type": "string",
+                    "example": "Palais des Sports"
+                  },
+                  "startDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2024-08-10T09:00:00Z"
+                  },
+                  "endDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2024-08-12T18:00:00Z"
+                  },
+                  "dateFormat": {
+                    "type": "string",
+                    "example": "dd/MM/yyyy"
+                  },
+                  "discipline": {
+                    "type": "string",
+                    "example": "Taekwondo Poomsae"
+                  },
+                  "grade": {
+                    "type": "string",
+                    "example": "G2"
+                  },
+                  "isWT": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "isPublic": {
+                    "type": "boolean",
+                    "example": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Compétition mise à jour avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Competition"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Non authentifié",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Compétition non trouvée",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Supprimer une compétition",
+        "tags": ["Compétitions"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de la compétition"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Compétition supprimée avec succès"
+          },
+          "401": {
+            "description": "Non authentifié",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Accès non autorisé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Compétition non trouvée",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/participants": {
+      "get": {
+        "summary": "Récupérer tous les participants",
+        "tags": ["Participants"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "REGISTERED",
+                "WITHDRAWN",
+                "DISQUALIFIED",
+                "INJURED",
+                "NO_SHOW"
+              ]
+            },
+            "description": "Filtrer par statut"
+          },
+          {
+            "in": "query",
+            "name": "organizationId",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filtrer par organisation"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste des participants",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Participant"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer un nouveau participant",
+        "tags": ["Participants"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateParticipantDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Participant créé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Participant"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Données invalides",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/participants/{id}": {
+      "get": {
+        "summary": "Récupérer un participant par son ID",
+        "tags": ["Participants"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID du participant"
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Détails du participant",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Participant"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Participant non trouvé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour un participant",
+        "tags": ["Participants"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID du participant"
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateParticipantDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Participant mis à jour",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Participant"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Données invalides",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Participant non trouvé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Supprimer un participant",
+        "tags": ["Participants"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID du participant"
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "204": {
+            "description": "Participant supprimé"
+          },
+          "400": {
+            "description": "Le participant a des matchs associés",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Participant non trouvé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Accès non autorisé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/participants/{id}/register-event": {
+      "post": {
+        "summary": "Inscrire un participant à un événement",
+        "tags": ["Participants"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID du participant"
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "eventId": {
+                    "type": "string",
+                    "description": "ID de l'événement"
+                  }
+                },
+                "required": ["eventId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Participant inscrit à l'événement",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Competitor"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Données invalides ou participant déjà inscrit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Participant ou événement non trouvé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Accès non autorisé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/participants/{id}/weigh-ins": {
+      "get": {
+        "summary": "Récupérer les pesées d'un participant",
+        "tags": ["Participants", "WeighIns"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID du participant"
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Liste des pesées du participant",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WeighIn"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Participant non trouvé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Accès non autorisé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajouter une pesée pour un participant",
+        "tags": ["Participants", "WeighIns"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID du participant"
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WeighInDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Pesée ajoutée",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeighIn"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Données invalides",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Participant non trouvé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Accès non autorisé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/weigh-ins": {
+      "get": {
+        "summary": "Récupérer toutes les pesées",
+        "tags": ["WeighIns"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "competitionId",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filtrer par compétition"
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "NOT_ATTEMPTED",
+                "FIRST_FAILED",
+                "SECOND_FAILED",
+                "VALIDATED",
+                "SURCLASSED"
+              ]
+            },
+            "description": "Filtrer par statut"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste des pesées",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WeighIn"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer une nouvelle pesée",
+        "tags": ["WeighIns"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWeighInDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Pesée créée",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeighIn"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Données invalides",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/weigh-ins/{id}": {
+      "get": {
+        "summary": "Récupérer une pesée par son ID",
+        "tags": ["WeighIns"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de la pesée"
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Détails de la pesée",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeighIn"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Pesée non trouvée",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour une pesée",
+        "tags": ["WeighIns"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de la pesée"
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWeighInDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Pesée mise à jour",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeighIn"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Données invalides",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Pesée non trouvée",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Accès non autorisé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Supprimer une pesée",
+        "tags": ["WeighIns"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de la pesée"
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "204": {
+            "description": "Pesée supprimée"
+          },
+          "404": {
+            "description": "Pesée non trouvée",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Accès non autorisé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sync/push": {
+      "post": {
+        "summary": "Envoyer des modifications depuis le client vers le serveur",
+        "tags": ["Synchronisation"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "modelName": {
+                    "type": "string",
+                    "example": "Competition"
+                  },
+                  "changes": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "required": ["modelName", "changes"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Modifications appliquées avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": ["SUCCESS", "ERROR", "CONFLICT"]
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Non authentifié",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sync/pull": {
+      "get": {
+        "summary": "Récupérer les modifications depuis le serveur",
+        "tags": ["Synchronisation"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "modelName",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Nom du modèle à synchroniser"
+          },
+          {
+            "in": "query",
+            "name": "since",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Date de dernière synchronisation"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Modifications récupérées avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "changes": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Non authentifié",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sync/config": {
+      "post": {
+        "summary": "Configurer les paramètres de synchronisation",
+        "tags": ["Synchronisation"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "modelName": {
+                    "type": "string",
+                    "example": "Competition"
+                  },
+                  "enabled": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "direction": {
+                    "type": "string",
+                    "enum": [
+                      "LOCAL_TO_CLOUD",
+                      "CLOUD_TO_LOCAL",
+                      "BIDIRECTIONAL"
+                    ],
+                    "example": "BIDIRECTIONAL"
+                  },
+                  "conflictStrategy": {
+                    "type": "string",
+                    "enum": [
+                      "LOCAL_WINS",
+                      "CLOUD_WINS",
+                      "NEWEST_WINS",
+                      "MANUAL"
+                    ],
+                    "example": "NEWEST_WINS"
+                  },
+                  "syncInterval": {
+                    "type": "integer",
+                    "example": 15
+                  }
+                },
+                "required": [
+                  "modelName",
+                  "enabled",
+                  "direction",
+                  "conflictStrategy"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Configuration mise à jour avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "config": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "modelName": {
+                          "type": "string"
+                        },
+                        "enabled": {
+                          "type": "boolean"
+                        },
+                        "direction": {
+                          "type": "string"
+                        },
+                        "conflictStrategy": {
+                          "type": "string"
+                        },
+                        "syncInterval": {
+                          "type": "integer"
+                        },
+                        "lastSyncedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Non authentifié",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Accès non autorisé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/competitors": {
+      "get": {
+        "summary": "Récupérer tous les compétiteurs",
+        "tags": ["Compétiteurs"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "eventId",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filtrer par événement"
+          },
+          {
+            "in": "query",
+            "name": "organizationId",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filtrer par organisation"
+          },
+          {
+            "in": "query",
+            "name": "country",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "FRA",
+                "KOR",
+                "USA",
+                "ESP",
+                "GER",
+                "ITA",
+                "GBR",
+                "TUR",
+                "BRA",
+                "CAN",
+                "MEX",
+                "JPN",
+                "CHN",
+                "IND",
+                "NED",
+                "SWE",
+                "POL",
+                "BEL",
+                "ARG",
+                "AUS"
+              ]
+            },
+            "description": "Filtrer par pays"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste des compétiteurs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Competitor"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/competitors/{id}": {
+      "get": {
+        "summary": "Récupérer un compétiteur par son ID",
+        "tags": ["Compétiteurs"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID du compétiteur"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Détails du compétiteur",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Competitor"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Compétiteur non trouvé"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/competitors/{id}/matches": {
+      "get": {
+        "summary": "Récupérer les matchs d'un compétiteur",
+        "tags": ["Compétiteurs"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID du compétiteur"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste des matchs du compétiteur",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Match"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Compétiteur non trouvé"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/competitors/{id}/participants": {
+      "get": {
+        "summary": "Récupérer les participants d'un compétiteur (pour les équipes)",
+        "tags": ["Compétiteurs"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID du compétiteur"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste des participants du compétiteur",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Participant"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Compétiteur non trouvé"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour un compétiteur",
+        "tags": ["Compétiteurs"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID du compétiteur"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "printName": {
+                    "type": "string"
+                  },
+                  "printInitialName": {
+                    "type": "string"
+                  },
+                  "tvName": {
+                    "type": "string"
+                  },
+                  "tvInitialName": {
+                    "type": "string"
+                  },
+                  "scoreboardName": {
+                    "type": "string"
+                  },
+                  "rank": {
+                    "type": "integer"
+                  },
+                  "seed": {
+                    "type": "integer"
+                  },
+                  "country": {
+                    "type": "string",
+                    "enum": [
+                      "FRA",
+                      "KOR",
+                      "USA",
+                      "ESP",
+                      "GER",
+                      "ITA",
+                      "GBR",
+                      "TUR",
+                      "BRA",
+                      "CAN",
+                      "MEX",
+                      "JPN",
+                      "CHN",
+                      "IND",
+                      "NED",
+                      "SWE",
+                      "POL",
+                      "BEL",
+                      "ARG",
+                      "AUS"
+                    ]
+                  }
+                },
+                "required": [
+                  "printName",
+                  "printInitialName",
+                  "tvName",
+                  "tvInitialName",
+                  "scoreboardName",
+                  "rank",
+                  "seed",
+                  "country"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Compétiteur mis à jour",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Competitor"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Données invalides"
+          },
+          "404": {
+            "description": "Compétiteur non trouvé"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Accès non autorisé"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Supprimer un compétiteur",
+        "tags": ["Compétiteurs"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID du compétiteur"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Compétiteur supprimé"
+          },
+          "404": {
+            "description": "Compétiteur non trouvé"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Accès non autorisé"
+          }
+        }
+      }
+    },
+    "/api/events": {
+      "get": {
+        "summary": "Récupérer tous les événements",
+        "tags": ["Événements"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "competitionId",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filtrer par compétition"
+          },
+          {
+            "in": "query",
+            "name": "discipline",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "TKW_K",
+                "TKW_P",
+                "TKW_F",
+                "TKW_T",
+                "PTKW_K",
+                "PTKW_P",
+                "TKW_B"
+              ]
+            },
+            "description": "Filtrer par discipline"
+          },
+          {
+            "in": "query",
+            "name": "gender",
+            "schema": {
+              "type": "string",
+              "enum": ["MALE", "FEMALE", "MIXED"]
+            },
+            "description": "Filtrer par genre"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste des événements",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Event"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer un nouvel événement",
+        "tags": ["Événements"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "discipline": {
+                    "type": "string",
+                    "enum": [
+                      "TKW_K",
+                      "TKW_P",
+                      "TKW_F",
+                      "TKW_T",
+                      "PTKW_K",
+                      "PTKW_P",
+                      "TKW_B"
+                    ]
+                  },
+                  "division": {
+                    "type": "string",
+                    "enum": [
+                      "OLYMPIC",
+                      "SENIORS",
+                      "YOUTH_OLYMPIC",
+                      "JUNIORS",
+                      "CADETS",
+                      "UNDER_21",
+                      "KIDS",
+                      "UNDER_30",
+                      "UNDER_40",
+                      "UNDER_50",
+                      "UNDER_60",
+                      "OVER_65",
+                      "OVER_30",
+                      "UNDER_17",
+                      "OVER_17"
+                    ]
+                  },
+                  "gender": {
+                    "type": "string",
+                    "enum": ["MALE", "FEMALE", "MIXED"]
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "Men -68kg"
+                  },
+                  "abbreviation": {
+                    "type": "string",
+                    "example": "M -68kg"
+                  },
+                  "weightCategory": {
+                    "type": "string",
+                    "example": "M -68kg"
+                  },
+                  "sportClass": {
+                    "type": "string",
+                    "example": "K44"
+                  },
+                  "category": {
+                    "type": "string",
+                    "example": "Individual"
+                  },
+                  "role": {
+                    "type": "string",
+                    "example": "ATHLETE"
+                  },
+                  "competitionId": {
+                    "type": "string"
+                  },
+                  "competitionType": {
+                    "type": "string",
+                    "enum": ["ELIMINATION", "POOL", "POOL_ELIMINATION"],
+                    "default": "ELIMINATION"
+                  }
+                },
+                "required": [
+                  "discipline",
+                  "division",
+                  "gender",
+                  "name",
+                  "abbreviation",
+                  "competitionId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Événement créé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Event"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Données invalides",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Accès non autorisé"
+          }
+        }
+      }
+    },
+    "/api/events/{id}": {
+      "get": {
+        "summary": "Récupérer un événement par son ID",
+        "tags": ["Événements"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de l'événement"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Détails de l'événement",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Event"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Événement non trouvé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour un événement",
+        "tags": ["Événements"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de l'événement"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "abbreviation": {
+                    "type": "string"
+                  },
+                  "weightCategory": {
+                    "type": "string"
+                  },
+                  "sportClass": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "competitionType": {
+                    "type": "string",
+                    "enum": ["ELIMINATION", "POOL", "POOL_ELIMINATION"]
+                  }
+                },
+                "required": ["name", "abbreviation", "competitionType"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Événement mis à jour",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Event"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Données invalides",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Événement non trouvé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Accès non autorisé"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Supprimer un événement",
+        "tags": ["Événements"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de l'événement"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Événement supprimé"
+          },
+          "404": {
+            "description": "Événement non trouvé"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Accès non autorisé"
+          }
+        }
+      }
+    },
+    "/api/events/{id}/competitors": {
+      "get": {
+        "summary": "Récupérer les compétiteurs d'un événement",
+        "tags": ["Événements"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de l'événement"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste des compétiteurs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Competitor"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Événement non trouvé"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/events/{id}/matches": {
+      "get": {
+        "summary": "Récupérer les matchs d'un événement",
+        "tags": ["Événements"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de l'événement"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste des matchs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Match"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Événement non trouvé"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/events/{id}/medal-winners": {
+      "get": {
+        "summary": "Récupérer les médaillés d'un événement",
+        "tags": ["Événements"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de l'événement"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste des médaillés",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MedalWinner"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Événement non trouvé"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/licenses": {
+      "get": {
+        "summary": "Récupérer toutes les licences",
+        "tags": ["Licences"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "organizationId",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filtrer par organisation"
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "type": "string",
+              "enum": ["ACTIVE", "EXPIRED", "SUSPENDED", "CANCELLED"]
+            },
+            "description": "Filtrer par statut"
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "schema": {
+              "type": "string",
+              "enum": ["ENTERPRISE", "PROFESSIONAL", "CLUB", "PARTNER"]
+            },
+            "description": "Filtrer par type"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste des licences",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "key": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "activatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "expiresAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "organizationId": {
+                        "type": "string"
+                      },
+                      "maxEvents": {
+                        "type": "integer"
+                      },
+                      "maxParticipants": {
+                        "type": "integer"
+                      },
+                      "maxUsers": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Accès non autorisé"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer une nouvelle licence",
+        "tags": ["Licences"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": ["ENTERPRISE", "PROFESSIONAL", "CLUB", "PARTNER"]
+                  },
+                  "organizationId": {
+                    "type": "string"
+                  },
+                  "maxEvents": {
+                    "type": "integer",
+                    "default": 1
+                  },
+                  "maxParticipants": {
+                    "type": "integer",
+                    "default": 100
+                  },
+                  "maxUsers": {
+                    "type": "integer",
+                    "default": 5
+                  },
+                  "expiresAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "features": {
+                    "type": "object"
+                  }
+                },
+                "required": ["type", "organizationId", "expiresAt"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Licence créée",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "key": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "organizationId": {
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Données invalides",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Accès non autorisé"
+          }
+        }
+      }
+    },
+    "/api/licenses/verify": {
+      "post": {
+        "summary": "Vérifier une licence",
+        "tags": ["Licences"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "machineId": {
+                    "type": "string"
+                  }
+                },
+                "required": ["key", "machineId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Licence vérifiée",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "valid": {
+                      "type": "boolean"
+                    },
+                    "license": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "expiresAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "maxEvents": {
+                          "type": "integer"
+                        },
+                        "maxParticipants": {
+                          "type": "integer"
+                        },
+                        "maxUsers": {
+                          "type": "integer"
+                        },
+                        "features": {
+                          "type": "object"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Données invalides"
+          },
+          "404": {
+            "description": "Licence non trouvée"
+          }
+        }
+      }
+    },
+    "/api/licenses/{id}": {
+      "get": {
+        "summary": "Récupérer une licence par son ID",
+        "tags": ["Licences"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de la licence"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Détails de la licence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "key": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "activatedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "expiresAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "organizationId": {
+                      "type": "string"
+                    },
+                    "maxEvents": {
+                      "type": "integer"
+                    },
+                    "maxParticipants": {
+                      "type": "integer"
+                    },
+                    "maxUsers": {
+                      "type": "integer"
+                    },
+                    "features": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Licence non trouvée"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Accès non autorisé"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour une licence",
+        "tags": ["Licences"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de la licence"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": ["ACTIVE", "EXPIRED", "SUSPENDED", "CANCELLED"]
+                  },
+                  "maxEvents": {
+                    "type": "integer"
+                  },
+                  "maxParticipants": {
+                    "type": "integer"
+                  },
+                  "maxUsers": {
+                    "type": "integer"
+                  },
+                  "expiresAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "features": {
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "status",
+                  "maxEvents",
+                  "maxParticipants",
+                  "maxUsers",
+                  "expiresAt"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Licence mise à jour",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "key": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Données invalides"
+          },
+          "404": {
+            "description": "Licence non trouvée"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Accès non autorisé"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Supprimer une licence",
+        "tags": ["Licences"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de la licence"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Licence supprimée"
+          }
+        }
+      }
+    },
+    "/api/licenses/{id}/usage": {
+      "get": {
+        "summary": "Obtenir les statistiques d'utilisation d'une licence",
+        "tags": ["Licences"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de la licence"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Statistiques d'utilisation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "events": {
+                      "type": "object",
+                      "properties": {
+                        "used": {
+                          "type": "integer"
+                        },
+                        "max": {
+                          "type": "integer"
+                        },
+                        "percentage": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "participants": {
+                      "type": "object",
+                      "properties": {
+                        "used": {
+                          "type": "integer"
+                        },
+                        "max": {
+                          "type": "integer"
+                        },
+                        "percentage": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "users": {
+                      "type": "object",
+                      "properties": {
+                        "used": {
+                          "type": "integer"
+                        },
+                        "max": {
+                          "type": "integer"
+                        },
+                        "percentage": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "activity": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "date": {
+                            "type": "string",
+                            "format": "date"
+                          },
+                          "actions": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Licence non trouvée"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Accès non autorisé"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,7604 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "API Taekwondo",
+    "description": "API pour la gestion des compétitions de Taekwondo avec synchronisation hors-ligne",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Support API Taekwondo"
+    }
+  },
+  "host": "localhost:3001",
+  "basePath": "/api",
+  "schemes": [
+    "http"
+  ],
+  "securityDefinitions": {
+    "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+    }
+  },
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                },
+                "role": {
+                  "example": "any"
+                },
+                "language": {
+                  "example": "any"
+                },
+                "organizationId": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/competitions/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/competitions/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "hostCity": {
+                  "example": "any"
+                },
+                "hostCountry": {
+                  "example": "any"
+                },
+                "location": {
+                  "example": "any"
+                },
+                "startDate": {
+                  "example": "any"
+                },
+                "endDate": {
+                  "example": "any"
+                },
+                "dateFormat": {
+                  "example": "any"
+                },
+                "discipline": {
+                  "example": "any"
+                },
+                "grade": {
+                  "example": "any"
+                },
+                "isWT": {
+                  "example": "any"
+                },
+                "isPublic": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/sync/push": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/sync/pull": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/sync/config": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/participants/": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "organizationId",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/participants/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/participants/{id}/register-event": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/participants/{id}/weighins": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/weighins/": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/weighins/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/weighins/participant/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/weighins/{{where{id}}": {
+      "delete": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/users/": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/users/{id}/notifications": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/pools/": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "eventId",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/pools/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/pools/{id}/competitors": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/pools/{id}/competitors/{competitorId}": {
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "competitorId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/pools/{id}/matches": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/pools/{id}/generate-matches": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/pools/{id}/standings": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/pools/{id}/update-standings": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/sessions/": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "competitionId",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/sessions/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/sessions/{id}/matches": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/events/": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "competitionId",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "discipline",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "gender",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "division",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/events/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/events/{id}/competitors": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/events/{id}/matches": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/events/{id}/medal-winners": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/matches/": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "eventId",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "mat",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "phase",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "competitorId",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/matches/generate": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/matches/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/matches/{id}/actions": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/matches/{id}/results": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/matches/{id}/assign-referees": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/matches/{id}/assign-equipment": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/matches/{id}/with-configuration": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/competitors/": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "eventId",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "organizationId",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/competitors/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/competitors/{id}/matches": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/competitors/{id}/participants": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/organizations/": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/organizations/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/organizations/{id}/participants": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/organizations/{id}/users": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/notifications/": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/notifications/mark-all-read": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/notifications/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/notifications/{id}/mark-read": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/medal-winners/": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "eventId",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "medalType",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/medal-winners/standings/{competitionId}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "competitionId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/medal-winners/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/licenses/": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "organizationId",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/licenses/verify": {
+      "post": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/licenses/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/licenses/{id}/usage": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/match-configuration/default": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "rules",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "division",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/match-configuration/{matchId}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "matchId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "matchId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "matchId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/register": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                },
+                "role": {
+                  "example": "any"
+                },
+                "language": {
+                  "example": "any"
+                },
+                "organizationId": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/me": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "organizationId",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/{id}/register-event": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/{id}/weighins": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/participant/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/{{where{id}}": {
+      "delete": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/{id}/competitors": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/{id}/matches": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/{id}/medal-winners": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/generate": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/{id}/actions": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/{id}/results": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/{id}/assign-referees": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/{id}/assign-equipment": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/{id}/with-configuration": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/{id}/competitors/{competitorId}": {
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "competitorId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/{id}/generate-matches": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/{id}/standings": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/{id}/update-standings": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/{id}/participants": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/{id}/users": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/{id}/notifications": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/mark-all-read": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/{id}/mark-read": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/standings/{competitionId}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "competitionId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/verify": {
+      "post": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/{id}/usage": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/default": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "rules",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "division",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/{matchId}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "matchId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "matchId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "matchId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "clg7h9bk40000apcgf4jkld5n"
+            }
+          }
+        },
+        "email": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "format": {
+              "type": "string",
+              "example": "email"
+            },
+            "example": {
+              "type": "string",
+              "example": "user@example.com"
+            }
+          }
+        },
+        "role": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "super_admin",
+                "admin",
+                "federation",
+                "club",
+                "coach",
+                "spectator"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "club"
+            }
+          }
+        },
+        "firstName": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "John"
+            }
+          }
+        },
+        "lastName": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "Doe"
+            }
+          }
+        },
+        "language": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "fr"
+            }
+          }
+        },
+        "organizationId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "createdAt": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "format": {
+              "type": "string",
+              "example": "date-time"
+            }
+          }
+        },
+        "updatedAt": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "format": {
+              "type": "string",
+              "example": "date-time"
+            }
+          }
+        }
+      }
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "error"
+            }
+          }
+        },
+        "statusCode": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 400
+            }
+          }
+        },
+        "message": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "Message d'erreur"
+            }
+          }
+        }
+      }
+    },
+    "Competition": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "clg7h9bk40001apcgf4jkld5n"
+            }
+          }
+        },
+        "name": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "Championnat de France 2024"
+            }
+          }
+        },
+        "hostCity": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "Paris"
+            }
+          }
+        },
+        "hostCountry": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "FRA",
+                "KOR",
+                "USA",
+                "ESP",
+                "GER",
+                "ITA",
+                "GBR",
+                "TUR",
+                "BRA",
+                "CAN"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "FRA"
+            }
+          }
+        },
+        "location": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "AccorHotels Arena"
+            }
+          }
+        },
+        "startDate": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "format": {
+              "type": "string",
+              "example": "date-time"
+            },
+            "example": {
+              "type": "string",
+              "example": "2024-07-10T09:00:00Z"
+            }
+          }
+        },
+        "endDate": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "format": {
+              "type": "string",
+              "example": "date-time"
+            },
+            "example": {
+              "type": "string",
+              "example": "2024-07-12T18:00:00Z"
+            }
+          }
+        },
+        "dateFormat": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "EEE dd MMM yyyy"
+            }
+          }
+        },
+        "discipline": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "Taekwondo Kyorugi"
+            }
+          }
+        },
+        "grade": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "G1"
+            }
+          }
+        },
+        "isWT": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "boolean"
+            },
+            "example": {
+              "type": "boolean",
+              "example": false
+            }
+          }
+        },
+        "isPublic": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "boolean"
+            },
+            "example": {
+              "type": "boolean",
+              "example": true
+            }
+          }
+        },
+        "organizerId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "createdById": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        }
+      }
+    },
+    "Participant": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "licenseNumber": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "FRA-12345"
+            }
+          }
+        },
+        "galNumber": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "KOR-9876"
+            }
+          }
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "WT_GMS",
+                "INTERNAL"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "INTERNAL"
+            }
+          }
+        },
+        "passportGivenName": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "Marie"
+            }
+          }
+        },
+        "passportFamilyName": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "DUPONT"
+            }
+          }
+        },
+        "preferredGivenName": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "Marie"
+            }
+          }
+        },
+        "preferredFamilyName": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "Dupont"
+            }
+          }
+        },
+        "printName": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "DUPONT Marie"
+            }
+          }
+        },
+        "printInitialName": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "DUPONT M."
+            }
+          }
+        },
+        "tvName": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "Marie DUPONT"
+            }
+          }
+        },
+        "tvInitialName": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "M. DUPONT"
+            }
+          }
+        },
+        "scoreboardName": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "DUPONT M."
+            }
+          }
+        },
+        "gender": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "MALE",
+                "FEMALE",
+                "MIXED"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "FEMALE"
+            }
+          }
+        },
+        "birthDate": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "format": {
+              "type": "string",
+              "example": "date-time"
+            },
+            "example": {
+              "type": "string",
+              "example": "2000-01-15T00:00:00Z"
+            }
+          }
+        },
+        "mainRole": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "ATHLETE"
+            }
+          }
+        },
+        "country": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "FRA",
+                "KOR",
+                "USA",
+                "ESP",
+                "GER",
+                "ITA",
+                "GBR",
+                "TUR",
+                "BRA",
+                "CAN"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "FRA"
+            }
+          }
+        },
+        "status": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "REGISTERED",
+                "WITHDRAWN",
+                "DISQUALIFIED",
+                "INJURED",
+                "NO_SHOW"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "REGISTERED"
+            }
+          }
+        },
+        "organizationId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        }
+      }
+    },
+    "Competitor": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "competitorType": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "A",
+                "T"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "A"
+            },
+            "description": {
+              "type": "string",
+              "example": "A pour Athlete (individuel), T pour Team"
+            }
+          }
+        },
+        "printName": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "DUPONT Marie"
+            }
+          }
+        },
+        "printInitialName": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "DUPONT M."
+            }
+          }
+        },
+        "tvName": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "Marie DUPONT"
+            }
+          }
+        },
+        "tvInitialName": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "M. DUPONT"
+            }
+          }
+        },
+        "scoreboardName": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "DUPONT M."
+            }
+          }
+        },
+        "rank": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 5
+            }
+          }
+        },
+        "seed": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 3
+            }
+          }
+        },
+        "country": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "FRA",
+                "KOR",
+                "USA",
+                "ESP",
+                "GER",
+                "ITA",
+                "GBR",
+                "TUR",
+                "BRA",
+                "CAN"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "FRA"
+            }
+          }
+        },
+        "eventId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "organizationId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        }
+      }
+    },
+    "Event": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "discipline": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "TKW_K",
+                "TKW_P",
+                "TKW_F",
+                "TKW_T",
+                "PTKW_K",
+                "PTKW_P",
+                "TKW_B"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "TKW_K"
+            }
+          }
+        },
+        "division": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "OLYMPIC",
+                "SENIORS",
+                "YOUTH_OLYMPIC",
+                "JUNIORS",
+                "CADETS",
+                "UNDER_21",
+                "KIDS",
+                "UNDER_30",
+                "UNDER_40",
+                "UNDER_50",
+                "UNDER_60",
+                "OVER_65",
+                "OVER_30",
+                "UNDER_17",
+                "OVER_17"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "SENIORS"
+            }
+          }
+        },
+        "gender": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "MALE",
+                "FEMALE",
+                "MIXED"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "MALE"
+            }
+          }
+        },
+        "name": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "Men -68kg"
+            }
+          }
+        },
+        "abbreviation": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "M -68kg"
+            }
+          }
+        },
+        "weightCategory": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "M -68kg"
+            }
+          }
+        },
+        "sportClass": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "K44"
+            }
+          }
+        },
+        "category": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "Individual"
+            }
+          }
+        },
+        "role": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "ATHLETE"
+            }
+          }
+        },
+        "competitionId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "competitionType": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "ELIMINATION",
+                "POOL",
+                "POOL_ELIMINATION"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "ELIMINATION"
+            }
+          }
+        }
+      }
+    },
+    "Session": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "name": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "Session matinale - Jour 1"
+            }
+          }
+        },
+        "startTime": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "format": {
+              "type": "string",
+              "example": "date-time"
+            }
+          }
+        },
+        "endTime": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "format": {
+              "type": "string",
+              "example": "date-time"
+            }
+          }
+        },
+        "scheduleStatus": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "SCHEDULED",
+                "GETTING_READY",
+                "RUNNING",
+                "FINISHED",
+                "DELAYED",
+                "CANCELLED",
+                "POSTPONED",
+                "RESCHEDULED",
+                "INTERRUPTED"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "SCHEDULED"
+            }
+          }
+        },
+        "competitionId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        }
+      }
+    },
+    "Match": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "mat": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 1
+            }
+          }
+        },
+        "number": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "101"
+            }
+          }
+        },
+        "phase": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "F",
+                "SF",
+                "QF",
+                "R16",
+                "R32",
+                "R64",
+                "R128",
+                "BMC",
+                "GMC",
+                "RP"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "QF"
+            }
+          }
+        },
+        "positionReference": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "QF-1"
+            }
+          }
+        },
+        "scheduleStatus": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "SCHEDULED",
+                "GETTING_READY",
+                "RUNNING",
+                "FINISHED",
+                "DELAYED",
+                "CANCELLED",
+                "POSTPONED",
+                "RESCHEDULED",
+                "INTERRUPTED"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "SCHEDULED"
+            }
+          }
+        },
+        "resultStatus": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "LIVE",
+                "INTERMEDIATE",
+                "UNCONFIRMED",
+                "UNOFFICIAL",
+                "OFFICIAL",
+                "PROTESTED"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "LIVE"
+            }
+          }
+        },
+        "resultDecision": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "PTF",
+                "PTG",
+                "GDP",
+                "RSC",
+                "SUP",
+                "WDR",
+                "DSQ",
+                "PUN",
+                "DQB"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "PTF"
+            }
+          }
+        },
+        "round": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 1
+            }
+          }
+        },
+        "roundTime": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "01:45"
+            }
+          }
+        },
+        "homeScore": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 5
+            }
+          }
+        },
+        "awayScore": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 3
+            }
+          }
+        },
+        "homePenalties": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 1
+            }
+          }
+        },
+        "awayPenalties": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 0
+            }
+          }
+        },
+        "scheduledStart": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "format": {
+              "type": "string",
+              "example": "date-time"
+            }
+          }
+        },
+        "estimatedStart": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "format": {
+              "type": "string",
+              "example": "date-time"
+            }
+          }
+        },
+        "actualStart": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "format": {
+              "type": "string",
+              "example": "date-time"
+            }
+          }
+        },
+        "eventId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "sessionId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "homeCompetitorId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "awayCompetitorId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        }
+      }
+    },
+    "MatchConfiguration": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "matchId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "rules": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "CONVENTIONAL",
+                "BESTOF3"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "CONVENTIONAL"
+            },
+            "description": {
+              "type": "string",
+              "example": "Type de règles du match"
+            }
+          }
+        },
+        "rounds": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 3
+            },
+            "description": {
+              "type": "string",
+              "example": "Nombre total de rounds réguliers"
+            }
+          }
+        },
+        "roundTime": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "02:00"
+            },
+            "description": {
+              "type": "string",
+              "example": "Durée d'un round (format MM:SS)"
+            }
+          }
+        },
+        "restTime": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "01:00"
+            },
+            "description": {
+              "type": "string",
+              "example": "Temps de repos entre les rounds (format MM:SS)"
+            }
+          }
+        },
+        "injuryTime": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "01:00"
+            },
+            "description": {
+              "type": "string",
+              "example": "Temps accordé en cas de blessure (format MM:SS)"
+            }
+          }
+        },
+        "bodyThreshold": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 20
+            },
+            "description": {
+              "type": "string",
+              "example": "Seuil du PSS pour le corps"
+            }
+          }
+        },
+        "headThreshold": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 10
+            },
+            "description": {
+              "type": "string",
+              "example": "Seuil du PSS pour la tête"
+            }
+          }
+        },
+        "homeVideoReplayQuota": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 1
+            },
+            "description": {
+              "type": "string",
+              "example": "Quota de demandes vidéo pour le compétiteur à domicile"
+            }
+          }
+        },
+        "awayVideoReplayQuota": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 1
+            },
+            "description": {
+              "type": "string",
+              "example": "Quota de demandes vidéo pour le compétiteur à l'extérieur"
+            }
+          }
+        },
+        "goldenPointEnabled": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "boolean"
+            },
+            "example": {
+              "type": "boolean",
+              "example": true
+            },
+            "description": {
+              "type": "string",
+              "example": "Indique si le point en or est activé"
+            }
+          }
+        },
+        "goldenPointTime": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "01:00"
+            },
+            "description": {
+              "type": "string",
+              "example": "Durée du round en point en or (format MM:SS)"
+            }
+          }
+        },
+        "maxDifference": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 20
+            },
+            "description": {
+              "type": "string",
+              "example": "Écart de points maximum déclenchant la fin du match"
+            }
+          }
+        },
+        "maxPenalties": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 10
+            },
+            "description": {
+              "type": "string",
+              "example": "Nombre maximum de pénalités autorisé"
+            }
+          }
+        }
+      }
+    },
+    "MatchRefereeAssignment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "matchId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "refJ1Id": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "refJ2Id": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "refJ3Id": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "refCRId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "refRJId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "refTAId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "assignedAt": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "format": {
+              "type": "string",
+              "example": "date-time"
+            }
+          }
+        }
+      }
+    },
+    "MatchAction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "matchId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "action": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "MATCH_LOADED",
+                "MATCH_START",
+                "ROUND_START",
+                "MATCH_TIME",
+                "MATCH_TIMEOUT",
+                "MATCH_RESUME",
+                "ROUND_END",
+                "MATCH_END",
+                "SCORE_HOME_PUNCH",
+                "SCORE_HOME_KICK",
+                "SCORE_HOME_TKICK",
+                "SCORE_HOME_SKICK",
+                "SCORE_HOME_HEAD",
+                "SCORE_HOME_THEAD",
+                "PENALTY_HOME",
+                "SCORE_AWAY_PUNCH",
+                "SCORE_AWAY_KICK",
+                "SCORE_AWAY_TKICK",
+                "SCORE_AWAY_SKICK",
+                "SCORE_AWAY_HEAD",
+                "SCORE_AWAY_THEAD",
+                "PENALTY_AWAY",
+                "INVALIDATE_SCORE",
+                "ADJUST_SCORE",
+                "ADJUST_PENALTY",
+                "VR_HOME_REQUEST",
+                "VR_HOME_ACCEPTED",
+                "VR_HOME_REJECTED",
+                "VR_AWAY_REQUEST",
+                "VR_AWAY_ACCEPTED",
+                "VR_AWAY_REJECTED"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "SCORE_HOME_KICK"
+            }
+          }
+        },
+        "hitlevel": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 25
+            }
+          }
+        },
+        "round": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 1
+            }
+          }
+        },
+        "roundTime": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "01:45"
+            }
+          }
+        },
+        "position": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 5
+            }
+          }
+        },
+        "homeScore": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 5
+            }
+          }
+        },
+        "awayScore": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 3
+            }
+          }
+        },
+        "homePenalties": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 1
+            }
+          }
+        },
+        "awayPenalties": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 0
+            }
+          }
+        },
+        "description": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "HOME",
+                "AWAY",
+                "CR"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "HOME"
+            }
+          }
+        },
+        "timestamp": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "format": {
+              "type": "string",
+              "example": "date-time"
+            }
+          }
+        }
+      }
+    },
+    "MatchResult": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "matchId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "status": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "LIVE",
+                "INTERMEDIATE",
+                "UNCONFIRMED",
+                "UNOFFICIAL",
+                "OFFICIAL",
+                "PROTESTED"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "OFFICIAL"
+            }
+          }
+        },
+        "round": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 3
+            }
+          }
+        },
+        "position": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 1
+            }
+          }
+        },
+        "decision": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "PTF",
+                "PTG",
+                "GDP",
+                "RSC",
+                "SUP",
+                "WDR",
+                "DSQ",
+                "PUN",
+                "DQB"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "PTF"
+            }
+          }
+        },
+        "homeType": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "WIN",
+                "LOSS",
+                "TIE"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "WIN"
+            }
+          }
+        },
+        "awayType": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "WIN",
+                "LOSS",
+                "TIE"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "LOSS"
+            }
+          }
+        },
+        "homeScore": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 15
+            }
+          }
+        },
+        "awayScore": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 9
+            }
+          }
+        },
+        "homePenalties": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 2
+            }
+          }
+        },
+        "awayPenalties": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 3
+            }
+          }
+        },
+        "description": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "timestamp": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "format": {
+              "type": "string",
+              "example": "date-time"
+            }
+          }
+        }
+      }
+    },
+    "MedalWinner": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "eventId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "competitorId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "medalType": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "GOLD",
+                "SILVER",
+                "BRONZE"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "GOLD"
+            }
+          }
+        },
+        "position": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 1
+            }
+          }
+        }
+      }
+    },
+    "Organization": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "name": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "French Taekwondo Federation"
+            }
+          }
+        },
+        "country": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "FRA",
+                "KOR",
+                "USA",
+                "ESP",
+                "GER",
+                "ITA",
+                "GBR",
+                "TUR",
+                "BRA",
+                "CAN"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "FRA"
+            }
+          }
+        },
+        "billingEmail": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "format": {
+              "type": "string",
+              "example": "email"
+            }
+          }
+        },
+        "billingAddress": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "vatNumber": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        }
+      }
+    },
+    "WeighIn": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "participantId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "competitionId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "weight": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "number"
+            },
+            "format": {
+              "type": "string",
+              "example": "float"
+            },
+            "example": {
+              "type": "number",
+              "example": 67.8
+            }
+          }
+        },
+        "status": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "NOT_ATTEMPTED",
+                "FIRST_FAILED",
+                "SECOND_FAILED",
+                "VALIDATED",
+                "SURCLASSED"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "VALIDATED"
+            }
+          }
+        },
+        "attemptDate": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "format": {
+              "type": "string",
+              "example": "date-time"
+            }
+          }
+        },
+        "userId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "random": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "boolean"
+            },
+            "example": {
+              "type": "boolean",
+              "example": false
+            }
+          }
+        }
+      }
+    },
+    "Pool": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "eventId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "name": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "Pool A"
+            }
+          }
+        },
+        "maxAthletes": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 5
+            }
+          }
+        },
+        "matchesPerAthlete": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 4
+            }
+          }
+        },
+        "pointsForWin": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 3
+            }
+          }
+        },
+        "pointsForDraw": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 1
+            }
+          }
+        },
+        "pointsForLoss": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 0
+            }
+          }
+        },
+        "qualifyingPlaces": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 2
+            }
+          }
+        }
+      }
+    },
+    "PoolStanding": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "poolId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "competitorId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "matchesPlayed": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 4
+            }
+          }
+        },
+        "wins": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 3
+            }
+          }
+        },
+        "draws": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 0
+            }
+          }
+        },
+        "losses": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 1
+            }
+          }
+        },
+        "pointsFor": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 25
+            }
+          }
+        },
+        "pointsAgainst": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 15
+            }
+          }
+        },
+        "pointsDifference": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 10
+            }
+          }
+        },
+        "totalPoints": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 9
+            }
+          }
+        },
+        "rank": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 1
+            }
+          }
+        },
+        "qualified": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "boolean"
+            },
+            "example": {
+              "type": "boolean",
+              "example": true
+            }
+          }
+        }
+      }
+    },
+    "Notification": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "userId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "type": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "FIGHT_SOON",
+                "FIGHT_RESULT",
+                "RANDOM_WEIGHTIN",
+                "INFO"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "FIGHT_SOON"
+            }
+          }
+        },
+        "title": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "Votre match commence dans 15 minutes"
+            }
+          }
+        },
+        "body": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "Préparez-vous pour votre match M-68kg contre Kim Lee sur le tapis 2"
+            }
+          }
+        },
+        "seen": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "boolean"
+            },
+            "example": {
+              "type": "boolean",
+              "example": false
+            }
+          }
+        },
+        "createdAt": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "format": {
+              "type": "string",
+              "example": "date-time"
+            }
+          }
+        }
+      }
+    },
+    "License": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "key": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "type": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "ENTERPRISE",
+                "PROFESSIONAL",
+                "CLUB",
+                "PARTNER"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "PROFESSIONAL"
+            }
+          }
+        },
+        "status": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "ACTIVE",
+                "EXPIRED",
+                "SUSPENDED",
+                "CANCELLED"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "ACTIVE"
+            }
+          }
+        },
+        "machineId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "activatedAt": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "format": {
+              "type": "string",
+              "example": "date-time"
+            }
+          }
+        },
+        "expiresAt": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "format": {
+              "type": "string",
+              "example": "date-time"
+            }
+          }
+        },
+        "maxEvents": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 5
+            }
+          }
+        },
+        "maxParticipants": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 200
+            }
+          }
+        },
+        "maxUsers": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 10
+            }
+          }
+        },
+        "features": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "object"
+            }
+          }
+        },
+        "organizationId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        }
+      }
+    },
+    "CreateParticipantDto": {
+      "type": "object",
+      "properties": {
+        "licenseNumber": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "FRA-12345"
+            }
+          }
+        },
+        "passportGivenName": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "Marie"
+            }
+          }
+        },
+        "passportFamilyName": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "DUPONT"
+            }
+          }
+        },
+        "preferredGivenName": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "Marie"
+            }
+          }
+        },
+        "preferredFamilyName": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "Dupont"
+            }
+          }
+        },
+        "gender": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "MALE",
+                "FEMALE",
+                "MIXED"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "FEMALE"
+            }
+          }
+        },
+        "birthDate": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "format": {
+              "type": "string",
+              "example": "date-time"
+            },
+            "example": {
+              "type": "string",
+              "example": "2000-01-15T00:00:00Z"
+            }
+          }
+        },
+        "mainRole": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "ATHLETE"
+            }
+          }
+        },
+        "country": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "FRA",
+                "KOR",
+                "USA",
+                "ESP",
+                "GER",
+                "ITA",
+                "GBR",
+                "TUR",
+                "BRA",
+                "CAN"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "FRA"
+            }
+          }
+        },
+        "organizationId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "galNumber": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "KOR-9876"
+            }
+          }
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "WT_GMS",
+                "INTERNAL"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "INTERNAL"
+            }
+          }
+        },
+        "status": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "REGISTERED",
+                "WITHDRAWN",
+                "DISQUALIFIED",
+                "INJURED",
+                "NO_SHOW"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "REGISTERED"
+            }
+          }
+        }
+      }
+    },
+    "CreateEventDto": {
+      "type": "object",
+      "properties": {
+        "discipline": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "TKW_K",
+                "TKW_P",
+                "TKW_F",
+                "TKW_T",
+                "PTKW_K",
+                "PTKW_P",
+                "TKW_B"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "TKW_K"
+            }
+          }
+        },
+        "division": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "OLYMPIC",
+                "SENIORS",
+                "YOUTH_OLYMPIC",
+                "JUNIORS",
+                "CADETS",
+                "UNDER_21",
+                "KIDS",
+                "UNDER_30",
+                "UNDER_40",
+                "UNDER_50",
+                "UNDER_60",
+                "OVER_65",
+                "OVER_30",
+                "UNDER_17",
+                "OVER_17"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "SENIORS"
+            }
+          }
+        },
+        "gender": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "MALE",
+                "FEMALE",
+                "MIXED"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "MALE"
+            }
+          }
+        },
+        "name": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "Men -68kg"
+            }
+          }
+        },
+        "abbreviation": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "M -68kg"
+            }
+          }
+        },
+        "weightCategory": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "M -68kg"
+            }
+          }
+        },
+        "sportClass": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "K44"
+            }
+          }
+        },
+        "category": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "Individual"
+            }
+          }
+        },
+        "role": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "ATHLETE"
+            }
+          }
+        },
+        "competitionId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "competitionType": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "ELIMINATION",
+                "POOL",
+                "POOL_ELIMINATION"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "ELIMINATION"
+            }
+          }
+        }
+      }
+    },
+    "CreateMatchDto": {
+      "type": "object",
+      "properties": {
+        "mat": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 1
+            }
+          }
+        },
+        "number": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "101"
+            }
+          }
+        },
+        "phase": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "F",
+                "SF",
+                "QF",
+                "R16",
+                "R32",
+                "R64",
+                "R128",
+                "BMC",
+                "GMC",
+                "RP"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "QF"
+            }
+          }
+        },
+        "positionReference": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "QF-1"
+            }
+          }
+        },
+        "scheduleStatus": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "SCHEDULED",
+                "GETTING_READY",
+                "RUNNING",
+                "FINISHED",
+                "DELAYED",
+                "CANCELLED",
+                "POSTPONED",
+                "RESCHEDULED",
+                "INTERRUPTED"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "SCHEDULED"
+            }
+          }
+        },
+        "scheduledStart": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "format": {
+              "type": "string",
+              "example": "date-time"
+            }
+          }
+        },
+        "eventId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "sessionId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "homeCompetitorId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        },
+        "awayCompetitorId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        }
+      }
+    },
+    "UpdateMatchDto": {
+      "type": "object",
+      "properties": {
+        "mat": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "integer"
+            },
+            "example": {
+              "type": "number",
+              "example": 1
+            }
+          }
+        },
+        "number": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "example": {
+              "type": "string",
+              "example": "101"
+            }
+          }
+        },
+        "scheduleStatus": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "enum": {
+              "type": "array",
+              "example": [
+                "SCHEDULED",
+                "GETTING_READY",
+                "RUNNING",
+                "FINISHED",
+                "DELAYED",
+                "CANCELLED",
+                "POSTPONED",
+                "RESCHEDULED",
+                "INTERRUPTED"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "type": "string",
+              "example": "SCHEDULED"
+            }
+          }
+        },
+        "scheduledStart": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            },
+            "format": {
+              "type": "string",
+              "example": "date-time"
+            }
+          }
+        },
+        "sessionId": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "example": "string"
+            }
+          }
+        }
+      }
+    },
+    "Unauthorized": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "example": "Authentification requise"
+        },
+        "content": {
+          "type": "object",
+          "properties": {
+            "application/json": {
+              "type": "object",
+              "properties": {
+                "schema": {
+                  "$ref": "#/definitions/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
